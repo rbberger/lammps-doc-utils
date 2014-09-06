@@ -17,7 +17,7 @@ listflag = False
 allflag = False
 tableflag = False  # makes a table if tb command specified
 rowquit = 0        # number of cols per row if c=N specified (default = 0)
-dwidth = 0         # width for all of the columns
+dwidth = "0"       # width for all of the columns
 tabledelim = ""    # specialized separator
 tablealign = ""    # alignment for the table as an image
 dataalign = ""     # alignment for data in table
@@ -95,7 +95,7 @@ def get_command_body(paragraph):
 def process_commands(flag, command_str):
     """apply commands one after the other to the paragraph"""
 
-    command_regex = r"(?P<cmd>[^ \t\n\(\),]+)(\((?P<args>.+)\))?,?"
+    command_regex = r"(?P<cmd>[^ \t\n\(\),\.]+)(\((?P<args>[^\)]+)\))?,?"
     command_pattern = re.compile(command_regex)
 
     global aliases
@@ -103,7 +103,7 @@ def process_commands(flag, command_str):
     global allflag
 
     pre = ""
-    post = ""
+    post = command_pattern.sub('', command_str)  # retain trailing punctuation
 
     for command, _, args_str in command_pattern.findall(command_str):
         if args_str:
@@ -269,7 +269,7 @@ def table_command(args, pre, post):
             cwnum = int(tbcommand[2:])
             cnum.append(cwnum)
             cwidth.append(value)
-        elif tbcommand[0:1] == "ca":
+        elif tbcommand[0:2] == "ca":
             canum = int(tbcommand[2:])
             acolnum.append(canum)
             colalign.append(value)
@@ -295,7 +295,7 @@ def table_command(args, pre, post):
     pre += tw
     border = " BORDER=" + tableborder + " >\n"
     pre += border
-    post = "</TD></TR></TABLE></DIV>\n" + post
+    post = "</TABLE></DIV>\n" + post
     return pre, post
 
 
@@ -380,88 +380,41 @@ def substitute_table(s):
 
     # declare integers to help with counting and finding position
 
-    currentc = 0 # current column
-    nend = 0
-    n1 = 0
-    n = find_n(s,nend,n1)
+    if rowquit > 0:
+        data = [x.strip() for x in s.split(tabledelim)]
+        rows = list(range(int(len(data)/rowquit)+1))
+        columns = list(range(rowquit))
+    else:
+        row_data = [row.split(tabledelim) for row in s.splitlines()]
+        num_cols = max([len(col_data) for col_data in row_data])
+        data = []
 
-    # if there are no separators, go to the end of the string
+        for col_data in row_data:
+            data += col_data
+            data += ['']*(num_cols-len(col_data))
 
-    if (n < 0) n = s.length()
+        rows = list(range(len(row_data)))
+        columns = list(range(num_cols))
 
-    # while n exists:
+    table = ""
 
-    while True: # n != npos
-        # ignore = 0 when pass by \n because looking for delimiters only
-        # when ignore==0 do not put in a <tr>
-        ignore = 1
+    for row in rows:
+        table += tr_tag
 
-        # For each loop starts nend at n
-        nend = n
+        for col in columns:
+            idx = row*len(columns) + col
+            if idx < len(data):
+                table += td_tag(col)
+                table += data[idx]
+                table += "</TD>"
 
-        # current column is 0, (very first loop), insert first <TR>
-        if currentc == 0:
-            currentc += 1
-            DT = td_tag(currentc)
-            s.insert(0,tr_tag)
-            s.insert(tr_tag.length(),DT)
-            nend = nend+tr_tag.length()+DT.length()
-            n = find_n(s,nend,n1)
-            if n == n1:
-                currentc += 1
-            else:
-                # currentc will remain one if rowquit==0
-                if rowquit > 0:
-                    s.erase(n,1);
-                    n = find_n(s,nend,n1)
-                    currentc += 1
-        else:
-            # if n is separator
-            if n == n1:
-                s.erase(n,tabledelim.length())
-                if currentc == (rowquit+1) and rowquit != 0:
-                    s.insert(nend, "</TD></TR>\n")
-                    nend = nend+ 11
-                    # set current column back to one to start new line
-                    currentc = 1
-                else:
-                    DT = td_tag(currentc)
-                    s.insert (nend,"</TD>")
-                    nend = nend+5
-                    s.insert(nend,DT)
-                    nend=nend+DT.length()
-                    # add one so current column is updated
-                    currentc++
-                    n = find_n(s,nend,n1)
-            else: # if n is newline character
-                s.erase(n,1);
-                # if columns == 0 means ARE searching for newlines
-                # else erase and ignore insert <tr> later and
-                # search for next separator
+        table += "</TR>\n"
 
-                if rowquit == 0:
-                    s.insert(nend,"</TD></TR>\n")
-                    nend=nend+11
-                    # set current column back to one to start new line
-                    currentc=1
-                else:
-                    ignore=0
-                    n = find_n(s,nend,n1)
-
-            # if we are at the beginning of the row then insert <TR>
-
-            if currentc==1 && ignore:
-                DT = td_tag(currentc) # find DT for currentc=1
-                s.insert(nend,tr_tag)
-                nend=nend+tr_tag.length()
-                s.insert(nend,DT)
-                n = find_n(s,nend,n1) # search for next separator
-                currentc++
-    return s
+    return table
 
 
 def td_tag(currentc):
-    """for tables: build <TD> string (DT) based on current column"""
+    """for tables: build <TD> string based on current column"""
 
     # eacolumn gives the alignment printout of a specific column
     # va gives vertical alignment to a specific column
@@ -486,7 +439,7 @@ def td_tag(currentc):
             break
 
     # set up vertical  alignment for particular columns
-    va = " "
+    va = ""
 
     for counter, valign in enumerate(colvalign):
         if vacolnum[counter] == currentc:
@@ -519,36 +472,8 @@ def td_tag(currentc):
         if c == currentc:
             dw = " WIDTH=\"" + cwidth[i] + "\""
 
-    # DT is set for all of this particular separator : reset next separator
-    DT = "<TD" + dw + eacolumn + va + ">"
-    return DT
-
-
-def find_n(s, nend, nsep):
-    """for tables:
-    find the next separator starting at nend(the end of the last .insert)
-    if there is either a delim or newline
-    decide which is first
-    set n = to that position
-    nsep is position of the next separator. changes in here.
-    """
-    nsep = s.find(tabledelim,nend)
-    n2 = s.find('\n',nend)
-    m = s.length() - 1;
-    if nsep >= 0 and n2 >= 0:
-        if nsep <= n2:
-            n = nsep
-        else:
-            n = n2
-    else:
-        if nsep >= 0:
-            n = nsep
-        else:
-            if (n2 < m):
-                n = n2
-            else:
-                n = string::npos
-    return n
+    # is set for all of this particular separator : reset next separator
+    return "<TD" + dw + eacolumn + va + ">"
 
 
 def substitute(s):
@@ -684,6 +609,9 @@ def main():
                 commands = "p"
                 pre, post = process_commands(1, commands)
                 body = substitute(body)
+
+            # uncomment to remove trailing spaces
+            #body = re.sub(r'[ ]+$', '', body, flags=re.MULTILINE)
 
             final = pre + body + post
             outfile.write("%s\n" % final)
