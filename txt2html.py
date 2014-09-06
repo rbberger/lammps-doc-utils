@@ -7,11 +7,12 @@ parser = argparse.ArgumentParser(description='converts a text file with simple f
 parser.add_argument('-b', dest='breakflag', action='store_true',
                    help='add a page-break comment to end of each HTML file. useful when set of HTML files will be converted to PDF')
 parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
+parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title based on first h1,h2,h3,h4... element')
 parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
 
 args = parser.parse_args()
 
-
+pagetitle = ""
 aliases = {}
 listflag = False
 allflag = False
@@ -92,7 +93,7 @@ def get_command_body(paragraph):
     return ''.join(parts)
 
 
-def process_commands(flag, command_str):
+def process_commands(flag, command_str, body=None):
     """apply commands one after the other to the paragraph"""
 
     command_regex = r"(?P<cmd>[^ \t\n\(\),\.]+)(\((?P<args>[^\)]+)\))?,?"
@@ -101,6 +102,7 @@ def process_commands(flag, command_str):
     global aliases
     global listflag
     global allflag
+    global pagetitle
 
     pre = ""
     post = command_pattern.sub('', command_str)  # retain trailing punctuation
@@ -119,7 +121,8 @@ def process_commands(flag, command_str):
                     exit(1)
 
                 aliases[args[0]] = args[1]
-                #print("Adding alias: ", args[0], args[1])
+            elif command[0] == "h" and body and pagetitle == "":
+                pagetitle = body.strip()
             else:
                 continue
 
@@ -543,6 +546,7 @@ def main():
     # setup list of files to process
     # npair = # of files to process
     # infile = input file names
+    global pagetitle
     global aliases
 
     # loop over files
@@ -552,6 +556,7 @@ def main():
             continue
 
         # clear global variables before processing file
+        pagetitle = ""
         aliases = {}
         tableflag = 0
         listflag = ""
@@ -570,7 +575,8 @@ def main():
         for paragraph in paragraphs(lines):
             if is_command(paragraph):
                 commands = get_command(paragraph)
-                process_commands(0, commands)
+                body = get_command_body(paragraph)
+                process_commands(0, commands, body)
 
         # close & reopen files
         infile.close()
@@ -579,6 +585,11 @@ def main():
 
         # write leading <HTML>
         outfile.write("<HTML>\n")
+
+        if args.create_title and pagetitle != "":
+            outfile.write("<HEAD>\n")
+            outfile.write("<TITLE>%s</TITLE>\n" % pagetitle)
+            outfile.write("</HEAD>\n")
 
         # process entire file
         # read file one paragraph at a time
