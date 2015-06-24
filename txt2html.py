@@ -107,6 +107,8 @@ class Txt2Html(object):
             paragraph += "<BR>\n"
         elif command == "pre":
             paragraph = "<PRE>" + paragraph + "</PRE>\n"
+        elif command == "c":
+            paragraph = "<CENTER>" + paragraph + "</CENTER>\n"
 
         return paragraph
 

@@ -85,5 +85,12 @@ class TestFormatting(unittest.TestCase):
                              "</PRE>\n"
                              "</HTML>\n")
 
+    def test_center_formatting(self):
+        s = self.txt2html.convert("Hello :c\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<CENTER>Hello \n"
+                             "</CENTER>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
