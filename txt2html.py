@@ -14,29 +14,28 @@ parser.add_argument('files',  metavar='file', nargs='+', help='one or more files
 
 args = parser.parse_args()
 
+agetitle = ""
+aliases = {}
+listflag = False
+allflag = False
+tableflag = False  # makes a table if tb command specified
+rowquit = 0        # number of cols per row if c=N specified (default = 0)
+dwidth = "0"       # width for all of the columns
+tabledelim = ""    # specialized separator
+tablealign = ""    # alignment for the table as an image
+dataalign = ""     # alignment for data in table
+rowvalign = ""     # vertical alignment for table
+
+cnum = []          # column IDs  with specified width
+cwidth = []        # column widths
+
+acolnum = []       # column IDs with specified alignment
+colalign = []      # column alignment
+
+vacolnum = []      # column IDs with specified vertical alignment
+colvalign = []     # column vertical alignment
+
 class Txt2Html(object):
-    def __init__(self):
-        self.pagetitle = ""
-        self.aliases = {}
-        self.listflag = False
-        self.allflag = False
-        self.tableflag = False  # makes a table if tb command specified
-        self.rowquit = 0        # number of cols per row if c=N specified (default = 0)
-        self.dwidth = "0"       # width for all of the columns
-        self.tabledelim = ""    # specialized separator
-        self.tablealign = ""    # alignment for the table as an image
-        self.dataalign = ""     # alignment for data in table
-        self.rowvalign = ""     # vertical alignment for table
-
-        self.cnum = []          # column IDs  with specified width
-        self.cwidth = []        # column widths
-
-        self.acolnum = []       # column IDs with specified alignment
-        self.colalign = []      # column alignment
-
-        self.vacolnum = []      # column IDs with specified vertical alignment
-        self.colvalign = []     # column vertical alignment
-
     def convert(self, content):
         if len(content) > 0:
             return "<HTML>\n<P>" + content + "</P>\n</HTML>\n"
