@@ -37,9 +37,38 @@ colvalign = []     # column vertical alignment
 
 class Txt2Html(object):
     def convert(self, content):
+        converted = "<HTML>\n"
+
         if len(content) > 0:
-            return "<HTML>\n<P>" + content + "</P>\n</HTML>\n"
-        return "<HTML>\n</HTML>\n"
+            converted += self.convert_paragraph(content)
+
+        converted += "</HTML>\n"
+        return converted
+
+    def convert_paragraph(self, paragraph):
+        converted = "<P>"
+
+        for line in self.lines(paragraph):
+            converted += line
+
+        converted += "</P>\n"
+        return converted
+
+    def lines(self, content):
+        lines = content.splitlines()
+        current_line = ""
+        i = 0
+
+        while i < len(lines):
+            current_line += lines[i]
+
+            if current_line.endswith("\\"):
+                current_line = current_line[0:-1]
+            else:
+                yield current_line + '\n'
+                current_line = ""
+
+            i += 1
 
 # TODO if output file is not writable
 #fprintf(stderr,"ERROR: Could not open %s\n",outfile.c_str())
