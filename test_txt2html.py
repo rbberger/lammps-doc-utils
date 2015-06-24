@@ -28,5 +28,12 @@ class TestBasicFormatting(unittest.TestCase):
                              "<div>Raw HTML</div>\n\n"
                              "</HTML>\n")
 
+    def test_markup_bold(self):
+        s = self.txt2html.convert("[bold]")
+        self.assertEquals(s, "<HTML>\n"
+                             "<P><B>bold</B>\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()

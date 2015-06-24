@@ -51,10 +51,15 @@ class Txt2Html(object):
         converted = "<P>"
 
         for line in self.lines(paragraph):
-            converted += line
+            converted += self.do_markup(line)
 
         converted += "</P>\n"
         return converted
+
+    def do_markup(self, line):
+        line = line.replace("[", "<B>")
+        line = line.replace("]", "</B>")
+        return line
 
     def lines(self, content):
         lines = content.splitlines()
