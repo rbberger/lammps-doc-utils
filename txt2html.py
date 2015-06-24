@@ -105,6 +105,8 @@ class Txt2Html(object):
             paragraph = "<P>" + paragraph + "</P>\n"
         elif command == "b":
             paragraph += "<BR>\n"
+        elif command == "pre":
+            paragraph = "<PRE>" + paragraph + "</PRE>\n"
 
         return paragraph
 

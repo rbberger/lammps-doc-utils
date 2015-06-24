@@ -78,5 +78,12 @@ class TestFormatting(unittest.TestCase):
                              "<BR>\n"
                              "</HTML>\n")
 
+    def test_preformat_formatting(self):
+        s = self.txt2html.convert("Hello :pre\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<PRE>Hello \n"
+                             "</PRE>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
