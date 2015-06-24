@@ -99,7 +99,7 @@ class Txt2Html(object):
         paragraph = []
 
         for line in lines:
-            if len(line) == 0 or line.isspace():
+            if self.is_paragraph_separator(line):
                 if len(paragraph) > 0:
                     yield '\n'.join(paragraph) + '\n'
                 paragraph = []
@@ -108,6 +108,9 @@ class Txt2Html(object):
 
         if len(paragraph) > 0:
             yield '\n'.join(paragraph) + '\n'
+
+    def is_paragraph_separator(self, line):
+        return len(line) == 0 or line.isspace()
 
     def lines(self, content):
         lines = content.splitlines()
