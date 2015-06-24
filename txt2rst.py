@@ -1,10 +1,12 @@
 #! /bin/env python
+# Converter of LAMMPS documentation format to Sphinx ReStructured Text
+# Written by Richard Berger (2014)
 import os
 import re
 import sys
 import argparse
 
-parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into HTML.\nformatting & markup specification is given in README')
+parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into ReStructured Text.\nformatting & markup specification is given in README')
 parser.add_argument('-b', dest='breakflag', action='store_true',
                    help='add a page-break comment to end of each HTML file. useful when set of HTML files will be converted to PDF')
 parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
@@ -623,7 +625,7 @@ def main():
         # open files & message to screen
 
         infile, outfile = file_open(0, f)
-        print("Converting ", f, "...")
+        print("Converting ", f, "...", file=sys.stderr)
 
         lines = infile.readlines()
 

@@ -1,3 +1,5 @@
+# Python port of txt2html by Steve Plimpton (http://www.cs.sandia.gov/cgi-bin/sjplimp/)
+# Written by Richard Berger (2014)
 import os
 import re
 import sys
@@ -565,7 +567,7 @@ def main():
         # open files & message to screen
 
         infile, outfile = file_open(0, f)
-        print("Converting ", f, "...")
+        print("Converting ", f, "...", file=sys.stderr)
 
         lines = infile.readlines()
 
