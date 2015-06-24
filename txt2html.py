@@ -35,11 +35,30 @@ colalign = []      # column alignment
 vacolnum = []      # column IDs with specified vertical alignment
 colvalign = []     # column vertical alignment
 
+class Markup(object):
+    BOLD_START = "["
+    BOLD_END = "]"
+    ITALIC_START = "{"
+    ITALIC_END = "}"
+
+    def convert(self, text):
+        text = self.bold(text)
+        text = self.italic(text)
+        return text
+
+    def bold(self, text):
+        text = text.replace(Markup.BOLD_START, "<B>")
+        text = text.replace(Markup.BOLD_END, "</B>")
+        return text
+
+    def italic(self, text):
+        text = text.replace(Markup.ITALIC_START, "<I>")
+        text = text.replace(Markup.ITALIC_END, "</I>")
+        return text
+
 class Txt2Html(object):
-    MARKUP_BOLD_START = "["
-    MARKUP_BOLD_END = "]"
-    MARKUP_ITALIC_START = "{"
-    MARKUP_ITALIC_END = "}"
+    def __init__(self):
+        self.markup = Markup()
 
     def convert(self, content):
         converted = "<HTML>\n"
@@ -62,19 +81,7 @@ class Txt2Html(object):
         return converted
 
     def do_markup(self, line):
-        line = self.do_bold_markup(line)
-        line = self.do_italic_markup(line)
-        return line
-
-    def do_bold_markup(self, line):
-        line = line.replace(Txt2Html.MARKUP_BOLD_START, "<B>")
-        line = line.replace(Txt2Html.MARKUP_BOLD_END, "</B>")
-        return line
-
-    def do_italic_markup(self, line):
-        line = line.replace(Txt2Html.MARKUP_ITALIC_START, "<I>")
-        line = line.replace(Txt2Html.MARKUP_ITALIC_END, "</I>")
-        return line
+        return self.markup.convert(line)
 
     def lines(self, content):
         lines = content.splitlines()
