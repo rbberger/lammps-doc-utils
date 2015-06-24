@@ -121,14 +121,22 @@ class Txt2Html(object):
     def paragraphs(self, content):
         lines = content.splitlines()
         paragraph = []
+        last_line_had_format = False
 
         for line in lines:
-            if self.is_paragraph_separator(line):
+            if self.is_paragraph_separator(line) or last_line_had_format:
                 if len(paragraph) > 0:
                     yield '\n'.join(paragraph) + '\n'
-                paragraph = []
+
+                if self.is_paragraph_separator(line):
+                    paragraph = []
+                    last_line_had_format = False
+                else:
+                    paragraph = [line]
+                    last_line_had_format = self.has_formatting(line)
             else:
                 paragraph.append(line)
+                last_line_had_format = self.has_formatting(line)
 
         if len(paragraph) > 0:
             yield '\n'.join(paragraph) + '\n'
