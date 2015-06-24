@@ -40,6 +40,8 @@ class Markup(object):
     BOLD_END = "]"
     ITALIC_START = "{"
     ITALIC_END = "}"
+    START_PLACEHOLDER = "<<PLACEHOLDER>>"
+    END_PLACEHOLDER = "<</PLACEHOLDER>>"
 
     def convert(self, text):
         text = self.bold(text)
@@ -47,13 +49,21 @@ class Markup(object):
         return text
 
     def bold(self, text):
+        text = text.replace("\\" + Markup.BOLD_START, Markup.START_PLACEHOLDER)
+        text = text.replace("\\" + Markup.BOLD_END, Markup.END_PLACEHOLDER)
         text = text.replace(Markup.BOLD_START, "<B>")
         text = text.replace(Markup.BOLD_END, "</B>")
+        text = text.replace(Markup.START_PLACEHOLDER, Markup.BOLD_START)
+        text = text.replace(Markup.END_PLACEHOLDER, Markup.BOLD_END)
         return text
 
     def italic(self, text):
+        text = text.replace("\\" + Markup.ITALIC_START, Markup.START_PLACEHOLDER)
+        text = text.replace("\\" + Markup.ITALIC_END, Markup.END_PLACEHOLDER)
         text = text.replace(Markup.ITALIC_START, "<I>")
         text = text.replace(Markup.ITALIC_END, "</I>")
+        text = text.replace(Markup.START_PLACEHOLDER, Markup.ITALIC_START)
+        text = text.replace(Markup.END_PLACEHOLDER, Markup.ITALIC_END)
         return text
 
 class Txt2Html(object):

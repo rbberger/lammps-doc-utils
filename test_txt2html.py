@@ -42,5 +42,14 @@ class TestBasicFormatting(unittest.TestCase):
                              "</P>\n"
                              "</HTML>\n")
 
+    def test_escape_markup(self):
+        s = self.txt2html.convert("[bold] = \\[bold\\]\n"
+                                  "{italic} = \\{italic\\}\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<P><B>bold</B> = [bold]\n"
+                             "<I>italic</I> = {italic}\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
