@@ -17,7 +17,16 @@ class TestBasicFormatting(unittest.TestCase):
 
     def test_line_concat(self):
         s = self.txt2html.convert("Hello World!\\\nBye World!\n")
-        self.assertEquals(s, "<HTML>\n<P>Hello World!Bye World!\n</P>\n</HTML>\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<P>Hello World!Bye World!\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
+    def test_html_pass_through(self):
+        s = self.txt2html.convert("<div>Raw HTML</div>\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<div>Raw HTML</div>\n\n"
+                             "</HTML>\n")
 
 if __name__ == '__main__':
     unittest.main()

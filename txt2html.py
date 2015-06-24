@@ -46,6 +46,8 @@ class Txt2Html(object):
         return converted
 
     def convert_paragraph(self, paragraph):
+        if paragraph.startswith('<') and paragraph.endswith('>\n'):
+            return paragraph + '\n'
         converted = "<P>"
 
         for line in self.lines(paragraph):
