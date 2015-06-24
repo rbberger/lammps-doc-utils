@@ -64,11 +64,18 @@ class TestFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2html = Txt2Html()
 
-    def test_p_formatting(self):
+    def test_paragraph_formatting(self):
         s = self.txt2html.convert("Hello :p\n")
         self.assertEquals(s, "<HTML>\n"
                              "<P>Hello \n"
                              "</P>\n"
+                             "</HTML>\n")
+
+    def test_break_formatting(self):
+        s = self.txt2html.convert("Hello :b\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "Hello \n"
+                             "<BR>\n"
                              "</HTML>\n")
 
 if __name__ == '__main__':

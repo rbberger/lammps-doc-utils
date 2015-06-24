@@ -103,6 +103,8 @@ class Txt2Html(object):
 
         if command == "p":
             paragraph = "<P>" + paragraph + "</P>\n"
+        elif command == "b":
+            paragraph += "<BR>\n"
 
         return paragraph
 
