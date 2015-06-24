@@ -81,7 +81,7 @@ class Txt2Html(object):
         return converted
 
     def convert_paragraph(self, paragraph):
-        if paragraph.startswith('<') and paragraph.endswith('>\n'):
+        if self.is_raw_html_paragraph(paragraph):
             return paragraph + '\n'
 
         if self.has_formatting(paragraph):
@@ -116,6 +116,9 @@ class Txt2Html(object):
 
         if len(paragraph) > 0:
             yield '\n'.join(paragraph) + '\n'
+
+    def is_raw_html_paragraph(self, paragraph):
+        return paragraph.startswith('<') and paragraph.endswith('>\n')
 
     def is_paragraph_separator(self, line):
         return len(line) == 0 or line.isspace()
