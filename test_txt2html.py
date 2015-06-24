@@ -72,11 +72,10 @@ class TestFormatting(unittest.TestCase):
                              "</HTML>\n")
 
     def test_two_paragraphs_through_formatting(self):
-        p = list(self.txt2html.paragraphs("Hello :p\nBye :p\n"))
+        text = "Hello :p\nBye :p\n"
+        p = list(self.txt2html.paragraphs(text))
+        s = self.txt2html.convert(text)
         self.assertEquals(len(p), 2)
-
-    def test_two_paragraph_formatting(self):
-        s = self.txt2html.convert("Hello :p\nBye :p\n")
         self.assertEquals(s, "<HTML>\n"
                              "<P>Hello \n"
                              "</P>\n"
