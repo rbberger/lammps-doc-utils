@@ -105,5 +105,27 @@ class TestFormatting(unittest.TestCase):
                              "</CENTER>\n"
                              "</HTML>\n")
 
+    def test_header_formatting(self):
+        s = self.txt2html.convert("Level 1 :h1\n"
+                                  "Level 2 :h2\n"
+                                  "Level 3 :h3\n"
+                                  "Level 4 :h4\n"
+                                  "Level 5 :h5\n"
+                                  "Level 6 :h6\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<H1>Level 1 \n"
+                             "</H1>\n"
+                             "<H2>Level 2 \n"
+                             "</H2>\n"
+                             "<H3>Level 3 \n"
+                             "</H3>\n"
+                             "<H4>Level 4 \n"
+                             "</H4>\n"
+                             "<H5>Level 5 \n"
+                             "</H5>\n"
+                             "<H6>Level 6 \n"
+                             "</H6>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()

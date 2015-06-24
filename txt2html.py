@@ -109,6 +109,10 @@ class Txt2Html(object):
             paragraph = "<PRE>" + paragraph + "</PRE>\n"
         elif command == "c":
             paragraph = "<CENTER>" + paragraph + "</CENTER>\n"
+        elif command == "h1" or command == "h2" or command == "h3" or \
+                        command == "h4" or command == "h5" or command == "h6":
+            tag = command.upper()
+            paragraph = "<%s>%s</%s>\n" % (tag, paragraph, tag)
 
         return paragraph
 
