@@ -38,6 +38,8 @@ class Txt2Html(object):
         self.colvalign = []     # column vertical alignment
 
     def convert(self, content):
+        if len(content) > 0:
+            return "<HTML>\n<P>" + content + "</P>\n</HTML>\n"
         return "<HTML>\n</HTML>\n"
 
 # TODO if output file is not writable
