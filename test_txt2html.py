@@ -15,6 +15,15 @@ class TestBasicFormatting(unittest.TestCase):
                                                                    "</P>\n"
                                                                    "</HTML>\n")
 
+    def test_two_paragraphs(self):
+        s = self.txt2html.convert("Hello World!\n\nBye World!\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<P>Hello World!\n"
+                             "</P>\n"
+                             "<P>Bye World!\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
     def test_line_concat(self):
         s = self.txt2html.convert("Hello World!\\\nBye World!\n")
         self.assertEquals(s, "<HTML>\n"

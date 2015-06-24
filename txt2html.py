@@ -74,7 +74,8 @@ class Txt2Html(object):
         converted = "<HTML>\n"
 
         if len(content) > 0:
-            converted += self.convert_paragraph(content)
+            for paragraph in self.paragraphs(content):
+                converted += self.convert_paragraph(paragraph)
 
         converted += "</HTML>\n"
         return converted
@@ -92,6 +93,21 @@ class Txt2Html(object):
 
     def do_markup(self, line):
         return self.markup.convert(line)
+
+    def paragraphs(self, content):
+        lines = content.splitlines()
+        paragraph = []
+
+        for line in lines:
+            if len(line) == 0 or line.isspace():
+                if len(paragraph) > 0:
+                    yield '\n'.join(paragraph) + '\n'
+                paragraph = []
+            else:
+                paragraph.append(line)
+
+        if len(paragraph) > 0:
+            yield '\n'.join(paragraph) + '\n'
 
     def lines(self, content):
         lines = content.splitlines()
