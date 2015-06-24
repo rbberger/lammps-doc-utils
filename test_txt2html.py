@@ -67,7 +67,7 @@ class TestFormatting(unittest.TestCase):
     def test_p_formatting(self):
         s = self.txt2html.convert("Hello :p\n")
         self.assertEquals(s, "<HTML>\n"
-                             "<P>Hello\n"
+                             "<P>Hello \n"
                              "</P>\n"
                              "</HTML>\n")
 

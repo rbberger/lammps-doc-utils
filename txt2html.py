@@ -91,9 +91,19 @@ class Txt2Html(object):
         return "<P>" + self.do_markup(paragraph) + "</P>\n"
 
     def has_formatting(self, paragraph):
-        return False
+        return self.last_word(paragraph).startswith(":")
+
+    def last_word(self, text):
+        return text.split()[-1]
 
     def do_formatting(self, paragraph):
+        format_str = self.last_word(paragraph)
+        paragraph = paragraph.replace(format_str, "")
+        command = format_str[1:]
+
+        if command == "p":
+            paragraph = "<P>" + paragraph + "</P>\n"
+
         return paragraph
 
     def do_markup(self, paragraph):
