@@ -60,5 +60,16 @@ class TestBasicFormatting(unittest.TestCase):
                              "</P>\n"
                              "</HTML>\n")
 
+class TestFormatting(unittest.TestCase):
+    def setUp(self):
+        self.txt2html = Txt2Html()
+
+    def test_p_formatting(self):
+        s = self.txt2html.convert("Hello :p\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<P>Hello\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()

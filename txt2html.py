@@ -83,16 +83,24 @@ class Txt2Html(object):
     def convert_paragraph(self, paragraph):
         if paragraph.startswith('<') and paragraph.endswith('>\n'):
             return paragraph + '\n'
-        converted = "<P>"
 
+        if self.has_formatting(paragraph):
+            paragraph = self.do_formatting(paragraph)
+            return self.do_markup(paragraph)
+
+        return "<P>" + self.do_markup(paragraph) + "</P>\n"
+
+    def has_formatting(self, paragraph):
+        return False
+
+    def do_formatting(self, paragraph):
+        return paragraph
+
+    def do_markup(self, paragraph):
+        converted = ""
         for line in self.lines(paragraph):
-            converted += self.do_markup(line)
-
-        converted += "</P>\n"
+            converted += self.markup.convert(line)
         return converted
-
-    def do_markup(self, line):
-        return self.markup.convert(line)
 
     def paragraphs(self, content):
         lines = content.splitlines()
