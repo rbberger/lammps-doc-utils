@@ -35,5 +35,12 @@ class TestBasicFormatting(unittest.TestCase):
                              "</P>\n"
                              "</HTML>\n")
 
+    def test_markup_italic(self):
+        s = self.txt2html.convert("{italic}")
+        self.assertEquals(s, "<HTML>\n"
+                             "<P><I>italic</I>\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()

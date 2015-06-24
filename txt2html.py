@@ -36,6 +36,11 @@ vacolnum = []      # column IDs with specified vertical alignment
 colvalign = []     # column vertical alignment
 
 class Txt2Html(object):
+    MARKUP_BOLD_START = "["
+    MARKUP_BOLD_END = "]"
+    MARKUP_ITALIC_START = "{"
+    MARKUP_ITALIC_END = "}"
+
     def convert(self, content):
         converted = "<HTML>\n"
 
@@ -57,8 +62,18 @@ class Txt2Html(object):
         return converted
 
     def do_markup(self, line):
-        line = line.replace("[", "<B>")
-        line = line.replace("]", "</B>")
+        line = self.do_bold_markup(line)
+        line = self.do_italic_markup(line)
+        return line
+
+    def do_bold_markup(self, line):
+        line = line.replace(Txt2Html.MARKUP_BOLD_START, "<B>")
+        line = line.replace(Txt2Html.MARKUP_BOLD_END, "</B>")
+        return line
+
+    def do_italic_markup(self, line):
+        line = line.replace(Txt2Html.MARKUP_ITALIC_START, "<I>")
+        line = line.replace(Txt2Html.MARKUP_ITALIC_END, "</I>")
         return line
 
     def lines(self, content):
