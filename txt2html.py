@@ -37,6 +37,9 @@ class Txt2Html(object):
         self.vacolnum = []      # column IDs with specified vertical alignment
         self.colvalign = []     # column vertical alignment
 
+    def convert(self, content):
+        return "<HTML>\n</HTML>\n"
+
 # TODO if output file is not writable
 #fprintf(stderr,"ERROR: Could not open %s\n",outfile.c_str())
 # #exit(1)
