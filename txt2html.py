@@ -111,6 +111,8 @@ class Formatting(object):
             return self.definition_list(paragraph)
         elif command == "l":
             return self.list_item(paragraph)
+        elif command == "ulb":
+            return self.unordered_list_begin(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -158,6 +160,9 @@ class Formatting(object):
 
     def list_item(self, paragraph):
         return "<LI>" + paragraph + "\n"
+
+    def unordered_list_begin(self, paragraph):
+        return "<UL>" + paragraph + "\n"
 
 class Txt2Html(object):
     def __init__(self):
