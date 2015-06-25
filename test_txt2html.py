@@ -1,5 +1,5 @@
 import unittest
-from txt2html import Txt2Html
+from txt2html import Txt2Html, Markup
 
 class TestBasicFormatting(unittest.TestCase):
     def setUp(self):
@@ -66,6 +66,20 @@ class TestBasicFormatting(unittest.TestCase):
                              "<P><A HREF = \"link\">Text</A>\n"
                              "</P>\n"
                              "</HTML>\n")
+
+class TestMarkup(unittest.TestCase):
+    def setUp(self):
+        self.markup = Markup()
+
+    def test_ignore_punctuation_in_link(self):
+        self.assertEquals(self.markup.convert('"Text"_link.'), "<A HREF = \"link\">Text</A>.")
+        self.assertEquals(self.markup.convert('"Text"_link,'), "<A HREF = \"link\">Text</A>,")
+        self.assertEquals(self.markup.convert('"Text"_link;'), "<A HREF = \"link\">Text</A>;")
+        self.assertEquals(self.markup.convert('"Text"_link:'), "<A HREF = \"link\">Text</A>:")
+        self.assertEquals(self.markup.convert('"Text"_link?'), "<A HREF = \"link\">Text</A>?")
+        self.assertEquals(self.markup.convert('"Text"_link!'), "<A HREF = \"link\">Text</A>!")
+        self.assertEquals(self.markup.convert('"Text"_link('), "<A HREF = \"link\">Text</A>(")
+        self.assertEquals(self.markup.convert('"Text"_link)'), "<A HREF = \"link\">Text</A>)")
 
 class TestFormatting(unittest.TestCase):
     def setUp(self):

@@ -73,6 +73,7 @@ class Markup(object):
 
     def link(self, text):
         for name, link in self.link_pattern.findall(text):
+            link = link.rstrip('.,;:?!()')
             href = "<A HREF = \"" + link + "\">" + name + "</A>"
             text = text.replace('\"%s\"_%s' % (name, link), href)
         return text
