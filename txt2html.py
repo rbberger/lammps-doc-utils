@@ -141,6 +141,19 @@ class Txt2Html(object):
                 converted += "<LI>" + line + "\n"
             converted += "</" + command.upper() + ">\n"
             paragraph = converted
+        elif command == "dl":
+            converted = "<DL>"
+            is_title = True
+            for line in paragraph.splitlines():
+                if is_title:
+                    converted += "<DT>" + line + "\n"
+                else:
+                    converted += "<DD>" + line + "\n"
+
+                is_title = not is_title
+
+            converted += "</DL>"
+            paragraph = converted
 
         return paragraph
 
