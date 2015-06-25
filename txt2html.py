@@ -46,12 +46,16 @@ class Markup(object):
     def __init__(self):
         link_regex = r"(?P<text>[^\"]+)\"_(?P<link>[^\s\t\n]+)"
         self.link_pattern = re.compile(link_regex)
+        self.aliases = {}
 
     def convert(self, text):
         text = self.bold(text)
         text = self.italic(text)
         text = self.link(text)
         return text
+
+    def add_link_alias(self, name, href):
+        self.aliases[name] = href
 
     def bold(self, text):
         text = text.replace("\\" + Markup.BOLD_START, Markup.START_PLACEHOLDER)
@@ -74,7 +78,13 @@ class Markup(object):
     def link(self, text):
         for name, link in self.link_pattern.findall(text):
             link = link.rstrip('.,;:?!()')
-            href = "<A HREF = \"" + link + "\">" + name + "</A>"
+
+            if link in self.aliases:
+                href = self.aliases[link]
+            else:
+                href = link
+
+            href = "<A HREF = \"" + href + "\">" + name + "</A>"
             text = text.replace('\"%s\"_%s' % (name, link), href)
         return text
 

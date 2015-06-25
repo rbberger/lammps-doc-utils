@@ -81,6 +81,10 @@ class TestMarkup(unittest.TestCase):
         self.assertEquals(self.markup.convert('"Text"_link('), "<A HREF = \"link\">Text</A>(")
         self.assertEquals(self.markup.convert('"Text"_link)'), "<A HREF = \"link\">Text</A>)")
 
+    def test_replace_alias_link(self):
+        self.markup.add_link_alias("link", "replacement")
+        self.assertEquals("<A HREF = \"replacement\">Text</A>", self.markup.convert('"Text"_link'))
+
 class TestFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2html = Txt2Html()
