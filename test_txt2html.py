@@ -152,5 +152,16 @@ class TestListFormatting(unittest.TestCase):
                              "</UL>\n"
                              "</HTML>\n")
 
+    def test_ordered_list(self):
+        s = self.txt2html.convert("one\n"
+                                  "two\n"
+                                  "three :ol\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<OL><LI>one\n"
+                             "<LI>two\n"
+                             "<LI>three \n"
+                             "</OL>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
