@@ -88,9 +88,75 @@ class Markup(object):
             text = text.replace('\"%s\"_%s' % (name, link), href)
         return text
 
+class Formatting(object):
+    def convert(self, command, paragraph):
+        if command == "p":
+            return self.paragraph(paragraph)
+        elif command == "b":
+            return self.linebreak(paragraph)
+        elif command == "pre":
+            return self.preformat(paragraph)
+        elif command == "c":
+            return self.center(paragraph)
+        elif command == "h1" or command == "h2" or command == "h3" or \
+                        command == "h4" or command == "h5" or command == "h6":
+            level = int(command[1])
+            return self.header(paragraph, level)
+        elif command == "ul":
+            return self.unordered_list(paragraph)
+        elif command == "ol":
+            return self.ordered_list(paragraph)
+        elif command == "dl":
+            return self.definition_list(paragraph)
+        return ""
+
+    def paragraph(self, paragraph):
+        return "<P>" + paragraph + "</P>\n"
+
+    def linebreak(self, paragraph):
+        return paragraph + "<BR>\n"
+
+    def preformat(self, paragraph):
+        return "<PRE>" + paragraph + "</PRE>\n"
+
+    def center(self, paragraph):
+        return "<CENTER>" + paragraph + "</CENTER>\n"
+
+    def header(self, paragraph, level):
+        return "<H%d>%s</H%d>\n" % (level, paragraph, level)
+
+    def unordered_list(self, paragraph):
+        converted = "<UL>"
+        for line in paragraph.splitlines():
+            converted += "<LI>" + line + "\n"
+        converted += "</UL>\n"
+        return converted
+
+    def ordered_list(self, paragraph):
+        converted = "<OL>"
+        for line in paragraph.splitlines():
+            converted += "<LI>" + line + "\n"
+        converted += "</OL>\n"
+        return converted
+
+    def definition_list(self, paragraph):
+        converted = "<DL>"
+        is_title = True
+        for line in paragraph.splitlines():
+            if is_title:
+                converted += "<DT>" + line + "\n"
+            else:
+                converted += "<DD>" + line + "\n"
+
+            is_title = not is_title
+
+        converted += "</DL>"
+        return converted
+
 class Txt2Html(object):
     def __init__(self):
         self.markup = Markup()
+        self.format = Formatting()
 
     def convert(self, content):
         converted = "<HTML>\n"
@@ -123,37 +189,7 @@ class Txt2Html(object):
         paragraph = paragraph.replace(format_str, "")
         command = format_str[1:]
 
-        if command == "p":
-            paragraph = "<P>" + paragraph + "</P>\n"
-        elif command == "b":
-            paragraph += "<BR>\n"
-        elif command == "pre":
-            paragraph = "<PRE>" + paragraph + "</PRE>\n"
-        elif command == "c":
-            paragraph = "<CENTER>" + paragraph + "</CENTER>\n"
-        elif command == "h1" or command == "h2" or command == "h3" or \
-                        command == "h4" or command == "h5" or command == "h6":
-            tag = command.upper()
-            paragraph = "<%s>%s</%s>\n" % (tag, paragraph, tag)
-        elif command == "ul" or command == "ol":
-            converted = "<" + command.upper() + ">"
-            for line in paragraph.splitlines():
-                converted += "<LI>" + line + "\n"
-            converted += "</" + command.upper() + ">\n"
-            paragraph = converted
-        elif command == "dl":
-            converted = "<DL>"
-            is_title = True
-            for line in paragraph.splitlines():
-                if is_title:
-                    converted += "<DT>" + line + "\n"
-                else:
-                    converted += "<DD>" + line + "\n"
-
-                is_title = not is_title
-
-            converted += "</DL>"
-            paragraph = converted
+        paragraph = self.format.convert(command, paragraph)
 
         return paragraph
 
