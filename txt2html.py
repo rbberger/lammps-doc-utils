@@ -42,6 +42,7 @@ class Markup(object):
     ITALIC_END = "}"
     START_PLACEHOLDER = "<<PLACEHOLDER>>"
     END_PLACEHOLDER = "<</PLACEHOLDER>>"
+    PUNCTUATION_CHARACTERS = '.,;:?!()'
 
     def __init__(self):
         link_regex = r"(?P<text>[^\"]+)\"_(?P<link>[^\s\t\n]+)"
@@ -77,7 +78,7 @@ class Markup(object):
 
     def link(self, text):
         for name, link in self.link_pattern.findall(text):
-            link = link.rstrip('.,;:?!()')
+            link = link.rstrip(Markup.PUNCTUATION_CHARACTERS)
 
             if link in self.aliases:
                 href = self.aliases[link]
