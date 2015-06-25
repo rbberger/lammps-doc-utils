@@ -43,9 +43,14 @@ class Markup(object):
     START_PLACEHOLDER = "<<PLACEHOLDER>>"
     END_PLACEHOLDER = "<</PLACEHOLDER>>"
 
+    def __init__(self):
+        link_regex = r"(?P<text>[^\"]+)\"_(?P<link>[^\s\t\n]+)"
+        self.link_pattern = re.compile(link_regex)
+
     def convert(self, text):
         text = self.bold(text)
         text = self.italic(text)
+        text = self.link(text)
         return text
 
     def bold(self, text):
@@ -64,6 +69,12 @@ class Markup(object):
         text = text.replace(Markup.ITALIC_END, "</I>")
         text = text.replace(Markup.START_PLACEHOLDER, Markup.ITALIC_START)
         text = text.replace(Markup.END_PLACEHOLDER, Markup.ITALIC_END)
+        return text
+
+    def link(self, text):
+        for name, link in self.link_pattern.findall(text):
+            href = "<A HREF = \"" + link + "\">" + name + "</A>"
+            text = text.replace('\"%s\"_%s' % (name, link), href)
         return text
 
 class Txt2Html(object):

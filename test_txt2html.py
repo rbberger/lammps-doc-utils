@@ -60,6 +60,13 @@ class TestBasicFormatting(unittest.TestCase):
                              "</P>\n"
                              "</HTML>\n")
 
+    def test_link_markup(self):
+        s = self.txt2html.convert('"Text"_link\n')
+        self.assertEquals(s, "<HTML>\n"
+                             "<P><A HREF = \"link\">Text</A>\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
 class TestFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2html = Txt2Html()
