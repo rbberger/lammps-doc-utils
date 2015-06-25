@@ -111,6 +111,10 @@ class Formatting(object):
             return self.definition_list(paragraph)
         elif command == "l":
             return self.list_item(paragraph)
+        elif command == "dt":
+            return self.definition_term(paragraph)
+        elif command == "dd":
+            return self.definition_description(paragraph)
         elif command == "ulb":
             return self.unordered_list_begin(paragraph)
         elif command == "ule":
@@ -166,6 +170,12 @@ class Formatting(object):
 
     def list_item(self, paragraph):
         return "<LI>" + paragraph + "\n"
+
+    def definition_term(self, paragraph):
+        return "<DT>" + paragraph + "\n"
+
+    def definition_description(self, paragraph):
+        return "<DD>" + paragraph + "\n"
 
     def unordered_list_begin(self, paragraph):
         return "<UL>" + paragraph + "\n"

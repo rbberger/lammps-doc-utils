@@ -183,6 +183,20 @@ class TestListFormatting(unittest.TestCase):
                              "\n"
                              "</HTML>\n")
 
+    def test_definition_term(self):
+        s = self.txt2html.convert("one :dt\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<DT>one \n"
+                             "\n"
+                             "</HTML>\n")
+
+    def test_definition_description(self):
+        s = self.txt2html.convert("one :dd\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<DD>one \n"
+                             "\n"
+                             "</HTML>\n")
+
     def test_unordered_list_begin(self):
         s = self.txt2html.convert("one :ulb\n")
         self.assertEquals(s, "<HTML>\n"
