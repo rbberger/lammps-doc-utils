@@ -135,6 +135,12 @@ class Txt2Html(object):
                         command == "h4" or command == "h5" or command == "h6":
             tag = command.upper()
             paragraph = "<%s>%s</%s>\n" % (tag, paragraph, tag)
+        elif command == "ul":
+            converted = "<UL>"
+            for line in paragraph.splitlines():
+                converted += "<LI>" + line + "\n"
+            converted += "</UL>\n"
+            paragraph = converted
 
         return paragraph
 
