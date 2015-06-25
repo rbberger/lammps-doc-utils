@@ -109,6 +109,8 @@ class Formatting(object):
             return self.ordered_list(paragraph)
         elif command == "dl":
             return self.definition_list(paragraph)
+        elif command == "l":
+            return self.list_item(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -153,6 +155,9 @@ class Formatting(object):
 
         converted += "</DL>"
         return converted
+
+    def list_item(self, paragraph):
+        return "<LI>" + paragraph + "\n"
 
 class Txt2Html(object):
     def __init__(self):

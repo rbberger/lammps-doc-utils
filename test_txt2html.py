@@ -1,5 +1,5 @@
 import unittest
-from txt2html import Txt2Html, Markup
+from txt2html import Txt2Html, Markup, Formatting
 
 class TestBasicFormatting(unittest.TestCase):
     def setUp(self):
@@ -174,6 +174,13 @@ class TestListFormatting(unittest.TestCase):
                              "<DT>B\n"
                              "<DD>second \n"
                              "</DL>\n"
+                             "</HTML>\n")
+
+    def test_list_item(self):
+        s = self.txt2html.convert("one :l\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<LI>one \n"
+                             "\n"
                              "</HTML>\n")
 
 if __name__ == '__main__':
