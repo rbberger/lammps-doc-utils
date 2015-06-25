@@ -190,5 +190,12 @@ class TestListFormatting(unittest.TestCase):
                              "\n"
                              "</HTML>\n")
 
+    def test_unordered_list_end(self):
+        s = self.txt2html.convert("one :ule\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "one \n"
+                             "</UL>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
