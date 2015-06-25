@@ -123,6 +123,10 @@ class Formatting(object):
             return self.ordered_list_begin(paragraph)
         elif command == "ole":
             return self.ordered_list_end(paragraph)
+        elif command == "dlb":
+            return self.definition_list_begin(paragraph)
+        elif command == "dle":
+            return self.definition_list_end(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -188,6 +192,12 @@ class Formatting(object):
 
     def ordered_list_end(self, paragraph):
         return paragraph + "</OL>\n"
+
+    def definition_list_begin(self, paragraph):
+        return "<DL>" + paragraph + "\n"
+
+    def definition_list_end(self, paragraph):
+        return paragraph + "</DL>\n"
 
 class Txt2Html(object):
     def __init__(self):

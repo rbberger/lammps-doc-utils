@@ -225,5 +225,19 @@ class TestListFormatting(unittest.TestCase):
                              "</OL>\n"
                              "</HTML>\n")
 
+    def test_definition_list_begin(self):
+        s = self.txt2html.convert("one :dlb\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<DL>one \n"
+                             "\n"
+                             "</HTML>\n")
+
+    def test_definition_list_end(self):
+        s = self.txt2html.convert("one :dle\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "one \n"
+                             "</DL>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
