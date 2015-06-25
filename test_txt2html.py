@@ -37,49 +37,35 @@ class TestBasicFormatting(unittest.TestCase):
                              "<div>Raw HTML</div>\n\n"
                              "</HTML>\n")
 
-    def test_markup_bold(self):
-        s = self.txt2html.convert("[bold]")
-        self.assertEquals(s, "<HTML>\n"
-                             "<P><B>bold</B>\n"
-                             "</P>\n"
-                             "</HTML>\n")
-
-    def test_markup_italic(self):
-        s = self.txt2html.convert("{italic}")
-        self.assertEquals(s, "<HTML>\n"
-                             "<P><I>italic</I>\n"
-                             "</P>\n"
-                             "</HTML>\n")
-
-    def test_escape_markup(self):
-        s = self.txt2html.convert("[bold] = \\[bold\\]\n"
-                                  "{italic} = \\{italic\\}\n")
-        self.assertEquals(s, "<HTML>\n"
-                             "<P><B>bold</B> = [bold]\n"
-                             "<I>italic</I> = {italic}\n"
-                             "</P>\n"
-                             "</HTML>\n")
-
-    def test_link_markup(self):
-        s = self.txt2html.convert('"Text"_link\n')
-        self.assertEquals(s, "<HTML>\n"
-                             "<P><A HREF = \"link\">Text</A>\n"
-                             "</P>\n"
-                             "</HTML>\n")
 
 class TestMarkup(unittest.TestCase):
     def setUp(self):
         self.markup = Markup()
 
+    def test_bold(self):
+        self.assertEquals("<B>bold</B>", self.markup.convert("[bold]"))
+
+    def test_italic(self):
+        self.assertEquals("<I>italic</I>", self.markup.convert("{italic}"))
+
+    def test_escape_markup(self):
+        s = self.markup.convert("[bold] = \\[bold\\]\n"
+                                "{italic} = \\{italic\\}\n")
+        self.assertEquals("<B>bold</B> = [bold]\n"
+                          "<I>italic</I> = {italic}\n", s)
+
+    def test_link_markup(self):
+        self.assertEquals("<A HREF = \"link\">Text</A>", self.markup.convert('"Text"_link'))
+
     def test_ignore_punctuation_in_link(self):
-        self.assertEquals(self.markup.convert('"Text"_link.'), "<A HREF = \"link\">Text</A>.")
-        self.assertEquals(self.markup.convert('"Text"_link,'), "<A HREF = \"link\">Text</A>,")
-        self.assertEquals(self.markup.convert('"Text"_link;'), "<A HREF = \"link\">Text</A>;")
-        self.assertEquals(self.markup.convert('"Text"_link:'), "<A HREF = \"link\">Text</A>:")
-        self.assertEquals(self.markup.convert('"Text"_link?'), "<A HREF = \"link\">Text</A>?")
-        self.assertEquals(self.markup.convert('"Text"_link!'), "<A HREF = \"link\">Text</A>!")
-        self.assertEquals(self.markup.convert('"Text"_link('), "<A HREF = \"link\">Text</A>(")
-        self.assertEquals(self.markup.convert('"Text"_link)'), "<A HREF = \"link\">Text</A>)")
+        self.assertEquals("<A HREF = \"link\">Text</A>.", self.markup.convert('"Text"_link.'))
+        self.assertEquals("<A HREF = \"link\">Text</A>,", self.markup.convert('"Text"_link,'))
+        self.assertEquals("<A HREF = \"link\">Text</A>;", self.markup.convert('"Text"_link;'))
+        self.assertEquals("<A HREF = \"link\">Text</A>:", self.markup.convert('"Text"_link:'))
+        self.assertEquals("<A HREF = \"link\">Text</A>?", self.markup.convert('"Text"_link?'))
+        self.assertEquals("<A HREF = \"link\">Text</A>!", self.markup.convert('"Text"_link!'))
+        self.assertEquals("<A HREF = \"link\">Text</A>(", self.markup.convert('"Text"_link('))
+        self.assertEquals("<A HREF = \"link\">Text</A>)", self.markup.convert('"Text"_link)'))
 
     def test_replace_alias_link(self):
         self.markup.add_link_alias("link", "replacement")
