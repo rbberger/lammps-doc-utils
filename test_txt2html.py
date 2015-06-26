@@ -283,5 +283,16 @@ class TestListFormatting(unittest.TestCase):
                              "</DL>\n"
                              "</HTML>\n")
 
+class TestSpecialCommands(unittest.TestCase):
+    def setUp(self):
+        self.txt2html = Txt2Html()
+
+    def test_line(self):
+        s = self.txt2html.convert("one :line\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<HR>one \n"
+                             "\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()

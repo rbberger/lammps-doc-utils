@@ -135,6 +135,8 @@ class Formatting(object):
             return self.all_breaks(paragraph)
         elif command == "all(l)":
             return self.all_list_items(paragraph)
+        elif command == "line":
+            return self.horizontal_rule(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -234,6 +236,9 @@ class Formatting(object):
             converted += "<LI>" + line + "\n"
         converted += "\n"
         return converted
+
+    def horizontal_rule(self, paragraph):
+        return "<HR>" + paragraph + "\n"
 
 class Txt2Html(object):
     def __init__(self):
