@@ -92,7 +92,9 @@ class Markup(object):
 class Formatting(object):
     def __init__(self):
         image_regex = r"^image\((?P<file>[^\,]+)(,(?P<link>[^\,]+))?\)"
+        named_link_regex = r"^link\((?P<name>[^\,]+)\)"
         self.image_pattern = re.compile(image_regex)
+        self.named_link_pattern = re.compile(named_link_regex)
 
     def convert(self, command, paragraph):
         if command == "p":
@@ -144,6 +146,10 @@ class Formatting(object):
         elif command.startswith("image"):
             m = self.image_pattern.match(command)
             return self.image(paragraph, file=m.group('file'), link=m.group('link'))
+        elif command.startswith("link"):
+            m = self.named_link_pattern.match(command)
+            if m:
+                return self.named_link(paragraph, name=m.group('name'))
         return ""
 
     def paragraph(self, paragraph):
@@ -252,6 +258,9 @@ class Formatting(object):
         if link:
             converted = "<A HREF = \"" + link + "\">" + converted + "</A>"
         return converted + paragraph + "\n"
+
+    def named_link(self, paragraph, name):
+        return "<A NAME = \"" + name + "\"></A>" + paragraph + "\n"
 
 class Txt2Html(object):
     def __init__(self):

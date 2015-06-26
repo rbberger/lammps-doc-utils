@@ -308,5 +308,12 @@ class TestSpecialCommands(unittest.TestCase):
                              "\n"
                              "</HTML>\n")
 
+    def test_named_link(self):
+        s = self.txt2html.convert("one :link(name)\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<A NAME = \"name\"></A>one \n"
+                             "\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
