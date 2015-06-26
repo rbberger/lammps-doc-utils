@@ -301,5 +301,12 @@ class TestSpecialCommands(unittest.TestCase):
                              "\n"
                              "</HTML>\n")
 
+    def test_image_with_link(self):
+        s = self.txt2html.convert("one :image(file,link)\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<A HREF = \"link\"><IMG SRC = \"file\"></A>one \n"
+                             "\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
