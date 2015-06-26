@@ -148,6 +148,17 @@ class TestFormatting(unittest.TestCase):
                           "\n"
                           "</HTML>\n", s)
 
+    def test_all_centered(self):
+        s = self.txt2html.convert("one\n"
+                                  "two\n"
+                                  "three :all(c)\n")
+        self.assertEquals("<HTML>\n"
+                          "<CENTER>one</CENTER>\n"
+                          "<CENTER>two</CENTER>\n"
+                          "<CENTER>three </CENTER>\n"
+                          "\n"
+                          "</HTML>\n", s)
+
 class TestListFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2html = Txt2Html()

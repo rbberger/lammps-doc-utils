@@ -129,6 +129,8 @@ class Formatting(object):
             return self.definition_list_end(paragraph)
         elif command == "all(p)":
             return self.all_paragraphs(paragraph)
+        elif command == "all(c)":
+            return self.all_centered(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -208,6 +210,12 @@ class Formatting(object):
         converted += "\n"
         return converted
 
+    def all_centered(self, paragraph):
+        converted = ""
+        for line in paragraph.splitlines():
+            converted += "<CENTER>" + line + "</CENTER>\n"
+        converted += "\n"
+        return converted
 
 class Txt2Html(object):
     def __init__(self):
