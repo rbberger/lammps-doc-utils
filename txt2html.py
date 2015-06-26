@@ -90,11 +90,14 @@ class Markup(object):
         return text
 
 class Formatting(object):
-    def __init__(self):
+    def __init__(self, markup):
         image_regex = r"^image\((?P<file>[^\,]+)(,(?P<link>[^\,]+))?\)"
         named_link_regex = r"^link\((?P<name>[^\,]+)\)"
+        define_link_alias_regex = r"^link\((?P<alias>[^\,]+),(?P<value>[^\,]+)\)"
         self.image_pattern = re.compile(image_regex)
         self.named_link_pattern = re.compile(named_link_regex)
+        self.define_link_alias_pattern = re.compile(define_link_alias_regex)
+        self.markup = markup
 
     def convert(self, command, paragraph):
         if command == "p":
@@ -150,6 +153,9 @@ class Formatting(object):
             m = self.named_link_pattern.match(command)
             if m:
                 return self.named_link(paragraph, name=m.group('name'))
+            m2 = self.define_link_alias_pattern.match(command)
+            if m2:
+                return self.define_link_alias(paragraph, alias=m2.group('alias'), value=m2.group('value'))
         return ""
 
     def paragraph(self, paragraph):
@@ -262,10 +268,14 @@ class Formatting(object):
     def named_link(self, paragraph, name):
         return "<A NAME = \"" + name + "\"></A>" + paragraph + "\n"
 
+    def define_link_alias(self, paragraph, alias, value):
+        self.markup.add_link_alias(alias, value)
+        return paragraph + "\n"
+
 class Txt2Html(object):
     def __init__(self):
         self.markup = Markup()
-        self.format = Formatting()
+        self.format = Formatting(self.markup)
 
     def convert(self, content):
         converted = "<HTML>\n"

@@ -315,5 +315,15 @@ class TestSpecialCommands(unittest.TestCase):
                              "\n"
                              "</HTML>\n")
 
+    def test_define_link_alias(self):
+        s = self.txt2html.convert("one :link(alias,value)\n"
+                                  "\"test\"_alias")
+        self.assertEquals(s, "<HTML>\n"
+                             "one \n"
+                             "\n"
+                             "<P><A HREF = \"value\">test</A>\n"
+                             "</P>\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()
