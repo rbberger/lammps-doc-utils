@@ -131,6 +131,8 @@ class Formatting(object):
             return self.all_paragraphs(paragraph)
         elif command == "all(c)":
             return self.all_centered(paragraph)
+        elif command == "all(b)":
+            return self.all_breaks(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -214,6 +216,13 @@ class Formatting(object):
         converted = ""
         for line in paragraph.splitlines():
             converted += "<CENTER>" + line + "</CENTER>\n"
+        converted += "\n"
+        return converted
+
+    def all_breaks(self, paragraph):
+        converted = ""
+        for line in paragraph.splitlines():
+            converted += line + "<BR>\n"
         converted += "\n"
         return converted
 

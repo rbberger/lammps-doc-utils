@@ -159,6 +159,17 @@ class TestFormatting(unittest.TestCase):
                           "\n"
                           "</HTML>\n", s)
 
+    def test_all_breaks(self):
+        s = self.txt2html.convert("one\n"
+                                  "two\n"
+                                  "three :all(b)\n")
+        self.assertEquals("<HTML>\n"
+                          "one<BR>\n"
+                          "two<BR>\n"
+                          "three <BR>\n"
+                          "\n"
+                          "</HTML>\n", s)
+
 class TestListFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2html = Txt2Html()
