@@ -127,6 +127,8 @@ class Formatting(object):
             return self.definition_list_begin(paragraph)
         elif command == "dle":
             return self.definition_list_end(paragraph)
+        elif command == "all(p)":
+            return self.all_paragraphs(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -198,6 +200,14 @@ class Formatting(object):
 
     def definition_list_end(self, paragraph):
         return paragraph + "</DL>\n"
+
+    def all_paragraphs(self, paragraph):
+        converted = ""
+        for line in paragraph.splitlines():
+            converted += "<P>" + line + "</P>\n"
+        converted += "\n"
+        return converted
+
 
 class Txt2Html(object):
     def __init__(self):

@@ -137,6 +137,17 @@ class TestFormatting(unittest.TestCase):
                              "</H6>\n"
                              "</HTML>\n")
 
+    def test_all_paragraphs(self):
+        s = self.txt2html.convert("one\n"
+                                  "two\n"
+                                  "three :all(p)\n")
+        self.assertEquals("<HTML>\n"
+                          "<P>one</P>\n"
+                          "<P>two</P>\n"
+                          "<P>three </P>\n"
+                          "\n"
+                          "</HTML>\n", s)
+
 class TestListFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2html = Txt2Html()
