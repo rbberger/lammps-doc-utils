@@ -159,32 +159,32 @@ class Formatting(object):
         return ""
 
     def paragraph(self, paragraph):
-        return "<P>" + paragraph + "</P>\n"
+        return "<P>" + paragraph + "</P>"
 
     def linebreak(self, paragraph):
-        return paragraph + "<BR>\n"
+        return paragraph + "<BR>"
 
     def preformat(self, paragraph):
-        return "<PRE>" + paragraph + "</PRE>\n"
+        return "<PRE>" + paragraph + "</PRE>"
 
     def center(self, paragraph):
-        return "<CENTER>" + paragraph + "</CENTER>\n"
+        return "<CENTER>" + paragraph + "</CENTER>"
 
     def header(self, paragraph, level):
-        return "<H%d>%s</H%d>\n" % (level, paragraph, level)
+        return "<H%d>%s</H%d>" % (level, paragraph, level)
 
     def unordered_list(self, paragraph):
         converted = "<UL>"
         for line in paragraph.splitlines():
             converted += "<LI>" + line + "\n"
-        converted += "</UL>\n"
+        converted += "</UL>"
         return converted
 
     def ordered_list(self, paragraph):
         converted = "<OL>"
         for line in paragraph.splitlines():
             converted += "<LI>" + line + "\n"
-        converted += "</OL>\n"
+        converted += "</OL>"
         return converted
 
     def definition_list(self, paragraph):
@@ -202,75 +202,71 @@ class Formatting(object):
         return converted
 
     def list_item(self, paragraph):
-        return "<LI>" + paragraph + "\n"
+        return "<LI>" + paragraph
 
     def definition_term(self, paragraph):
-        return "<DT>" + paragraph + "\n"
+        return "<DT>" + paragraph
 
     def definition_description(self, paragraph):
-        return "<DD>" + paragraph + "\n"
+        return "<DD>" + paragraph
 
     def unordered_list_begin(self, paragraph):
-        return "<UL>" + paragraph + "\n"
+        return "<UL>" + paragraph
 
     def unordered_list_end(self, paragraph):
-        return paragraph + "</UL>\n"
+        return paragraph + "</UL>"
 
     def ordered_list_begin(self, paragraph):
-        return "<OL>" + paragraph + "\n"
+        return "<OL>" + paragraph
 
     def ordered_list_end(self, paragraph):
-        return paragraph + "</OL>\n"
+        return paragraph + "</OL>"
 
     def definition_list_begin(self, paragraph):
-        return "<DL>" + paragraph + "\n"
+        return "<DL>" + paragraph
 
     def definition_list_end(self, paragraph):
-        return paragraph + "</DL>\n"
+        return paragraph + "</DL>"
 
     def all_paragraphs(self, paragraph):
         converted = ""
         for line in paragraph.splitlines():
             converted += "<P>" + line + "</P>\n"
-        converted += "\n"
         return converted
 
     def all_centered(self, paragraph):
         converted = ""
         for line in paragraph.splitlines():
             converted += "<CENTER>" + line + "</CENTER>\n"
-        converted += "\n"
         return converted
 
     def all_breaks(self, paragraph):
         converted = ""
         for line in paragraph.splitlines():
             converted += line + "<BR>\n"
-        converted += "\n"
         return converted
 
     def all_list_items(self, paragraph):
         converted = ""
         for line in paragraph.splitlines():
             converted += "<LI>" + line + "\n"
-        converted += "\n"
         return converted
 
     def horizontal_rule(self, paragraph):
-        return "<HR>" + paragraph + "\n"
+        return "<HR>" + paragraph
 
     def image(self, paragraph, file, link=None):
         converted = "<IMG SRC = \"" + file + "\">"
         if link:
             converted = "<A HREF = \"" + link + "\">" + converted + "</A>"
-        return converted + paragraph + "\n"
+        return converted + paragraph
 
     def named_link(self, paragraph, name):
-        return "<A NAME = \"" + name + "\"></A>" + paragraph + "\n"
+        return "<A NAME = \"" + name + "\"></A>" + paragraph
 
     def define_link_alias(self, paragraph, alias, value):
         self.markup.add_link_alias(alias, value)
-        return paragraph + "\n"
+        return paragraph
 
 class Txt2Html(object):
     def __init__(self):
@@ -306,11 +302,14 @@ class Txt2Html(object):
     def do_formatting(self, paragraph):
         format_str = self.last_word(paragraph)
         paragraph = paragraph.replace(format_str, "")
-        command = format_str[1:]
+        commands = format_str[1:]
+        command_regex = r"(?P<command>[^\(,]+(\([^\)]+\))?),?"
+        command_pattern = re.compile(command_regex)
 
-        paragraph = self.format.convert(command, paragraph)
+        for command, _ in reversed(command_pattern.findall(commands)):
+            paragraph = self.format.convert(command, paragraph)
 
-        return paragraph
+        return paragraph + '\n'
 
     def do_markup(self, paragraph):
         converted = ""

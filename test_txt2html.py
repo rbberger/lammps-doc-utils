@@ -181,6 +181,13 @@ class TestFormatting(unittest.TestCase):
                           "\n"
                           "</HTML>\n", s)
 
+    def test_two_commands(self):
+        s = self.txt2html.convert("one :ulb,l\n")
+        self.assertEquals("<HTML>\n"
+                          "<UL><LI>one \n"
+                          "\n"
+                          "</HTML>\n", s)
+
 class TestListFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2html = Txt2Html()
