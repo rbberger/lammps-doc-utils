@@ -294,5 +294,12 @@ class TestSpecialCommands(unittest.TestCase):
                              "\n"
                              "</HTML>\n")
 
+    def test_image(self):
+        s = self.txt2html.convert("one :image(file)\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<IMG SRC = \"file\">one \n"
+                             "\n"
+                             "</HTML>\n")
+
 if __name__ == '__main__':
     unittest.main()

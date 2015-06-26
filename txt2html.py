@@ -90,6 +90,10 @@ class Markup(object):
         return text
 
 class Formatting(object):
+    def __init__(self):
+        image_regex = r"^image\((?P<file>[^\,]+)\)"
+        self.image_pattern = re.compile(image_regex)
+
     def convert(self, command, paragraph):
         if command == "p":
             return self.paragraph(paragraph)
@@ -137,6 +141,9 @@ class Formatting(object):
             return self.all_list_items(paragraph)
         elif command == "line":
             return self.horizontal_rule(paragraph)
+        elif command.startswith("image"):
+            m = self.image_pattern.match(command)
+            return self.image(paragraph, file=m.group('file'))
         return ""
 
     def paragraph(self, paragraph):
@@ -239,6 +246,9 @@ class Formatting(object):
 
     def horizontal_rule(self, paragraph):
         return "<HR>" + paragraph + "\n"
+
+    def image(self, paragraph, file):
+        return "<IMG SRC = \"" + file + "\">" + paragraph + "\n"
 
 class Txt2Html(object):
     def __init__(self):
