@@ -376,6 +376,16 @@ class TestTableCommand(unittest.TestCase):
                           "</TD></TR></TABLE></DIV>\n\n"
                           "</HTML>\n", s)
 
+    def test_fixed_table_columns(self):
+        s = self.txt2html.convert("a,b,c,d,\ne,f,g,h :tb(c=3)\n")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD >a</TD><TD >b</TD><TD >c</TD></TR>\n"
+                          "<TR><TD >d</TD><TD >e</TD><TD >f</TD></TR>\n"
+                          "<TR><TD >g</TD><TD >h \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "</HTML>\n", s)
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()

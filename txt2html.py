@@ -157,7 +157,8 @@ class Formatting(object):
             if m2:
                 return self.define_link_alias(paragraph, alias=m2.group('alias'), value=m2.group('value'))
         elif command.startswith("tb"):
-            return self.table(paragraph)
+            configuration = self.get_table_configuration(command)
+            return self.table(paragraph, configuration)
         return ""
 
     def paragraph(self, paragraph):
@@ -270,9 +271,30 @@ class Formatting(object):
         self.markup.add_link_alias(alias, value)
         return paragraph
 
-    def table(self, paragraph):
-        SEPARATOR = ','
-        NUM_COLUMNS = 0
+    def get_table_configuration(self, command):
+        config = {
+            'separator': ',',
+            'num_columns': 0
+        }
+
+        table_regex = r"^tb\((?P<configuration>.+)\)"
+        table_pattern = re.compile(table_regex)
+
+        m = table_pattern.match(command)
+        if m:
+            entries = m.groups('configuration')[0].split(',')
+
+            for entry in entries:
+                lhs, rhs = entry.split('=')
+
+                if lhs == 'c':
+                    config['num_columns'] = int(rhs)
+
+        return config
+
+    def table(self, paragraph, configuration):
+        SEPARATOR = configuration['separator']
+        NUM_COLUMNS = configuration['num_columns']
 
         rows = []
 
@@ -280,6 +302,19 @@ class Formatting(object):
             lines = paragraph.splitlines()
             for line in lines:
                 rows.append(line.split(SEPARATOR))
+        else:
+            cells = paragraph.split(SEPARATOR)
+            current_row = []
+
+            for cell in cells:
+                current_row.append(cell.strip('\n'))
+
+                if len(current_row) == NUM_COLUMNS:
+                    rows.append(current_row)
+                    current_row = []
+
+            if len(current_row) > 0:
+                rows.append(current_row)
 
         tbl = "<DIV ALIGN=center>"
         tbl += "<TABLE  BORDER=1 >\n"
