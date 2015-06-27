@@ -462,6 +462,26 @@ class TestTableCommand(unittest.TestCase):
                           "</TD></TR></TABLE></DIV>\n\n"
                           "</HTML>\n", s)
 
+    def test_change_cell_vertical_alignment(self):
+        s = self.txt2html.convert("a :tb(eva=t,ea=l)\n"
+                                  "b :tb(eva=m)\n"
+                                  "c :tb(eva=ba)\n"
+                                  "d :tb(eva=bo)\n")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR ALIGN=\"left\" VALIGN =\"top\"><TD >a \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR VALIGN =\"middle\"><TD >b \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR VALIGN =\"baseline\"><TD >c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR VALIGN =\"bottom\"><TD >d \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "</HTML>\n", s)
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()

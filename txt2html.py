@@ -285,7 +285,8 @@ class Formatting(object):
         m = table_pattern.match(command)
         if m:
             entries = m.groups('configuration')[0].split(',')
-            alignments = {'l' : 'left', 'c': 'center', 'r' : 'right'}
+            alignments = {'l': 'left', 'c': 'center', 'r' : 'right'}
+            vertical_alignments = {'t': 'top', 'm': 'middle', 'ba' : 'baseline', 'bo': 'bottom'}
 
             for entry in entries:
                 lhs, rhs = entry.split('=')
@@ -305,6 +306,8 @@ class Formatting(object):
                     config['table_alignment'] = alignments[rhs]
                 elif lhs == "ea":
                     config['cell_alignment'] = alignments[rhs]
+                elif lhs == "eva":
+                    config['cell_vertical_alignment'] = vertical_alignments[rhs]
 
         return config
 
@@ -347,6 +350,9 @@ class Formatting(object):
 
             if 'cell_alignment' in configuration:
                 tbl += " ALIGN=\"%s\"" % configuration['cell_alignment']
+
+            if 'cell_vertical_alignment' in configuration:
+                tbl += " VALIGN =\"%s\"" % configuration['cell_vertical_alignment']
 
             tbl += ">"
 
