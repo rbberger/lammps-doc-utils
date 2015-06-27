@@ -43,6 +43,7 @@ class TestBasicFormatting(unittest.TestCase):
 class TestMarkup(unittest.TestCase):
     def setUp(self):
         self.markup = txt2html.Markup()
+        self.txt2html = txt2html.Txt2Html()
 
     def test_bold(self):
         self.assertEquals("<B>bold</B>", self.markup.convert("[bold]"))
@@ -58,6 +59,15 @@ class TestMarkup(unittest.TestCase):
 
     def test_link_markup(self):
         self.assertEquals("<A HREF = \"link\">Text</A>", self.markup.convert('"Text"_link'))
+
+    def test_multiline_link_markup(self):
+        s = self.txt2html.convert('"Te\n'
+                                  'xt"_link')
+        self.assertEquals("<HTML>\n"
+                          "<P><A HREF = \"link\">Te\n"
+                          "xt</A>\n"
+                          "</P>\n"
+                          "</HTML>\n", s)
 
     def test_ignore_punctuation_in_link(self):
         self.assertEquals("<A HREF = \"link\">Text</A>.", self.markup.convert('"Text"_link.'))

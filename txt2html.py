@@ -312,17 +312,13 @@ class Txt2Html(object):
         return paragraph + '\n'
 
     def do_markup(self, paragraph):
-        converted = ""
-        for line in self.lines(paragraph):
-            converted += self.markup.convert(line)
-        return converted
+        return self.markup.convert(paragraph)
 
     def paragraphs(self, content):
-        lines = content.splitlines()
         paragraph = []
         last_line_had_format = False
 
-        for line in lines:
+        for line in self.lines(content):
             if self.is_paragraph_separator(line) or last_line_had_format:
                 if len(paragraph) > 0:
                     yield '\n'.join(paragraph) + '\n'
@@ -357,7 +353,7 @@ class Txt2Html(object):
             if current_line.endswith("\\"):
                 current_line = current_line[0:-1]
             else:
-                yield current_line + '\n'
+                yield current_line
                 current_line = ""
 
             i += 1
