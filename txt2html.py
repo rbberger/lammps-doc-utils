@@ -156,6 +156,8 @@ class Formatting(object):
             m2 = self.define_link_alias_pattern.match(command)
             if m2:
                 return self.define_link_alias(paragraph, alias=m2.group('alias'), value=m2.group('value'))
+        elif command.startswith("tb"):
+            return self.table(paragraph)
         return ""
 
     def paragraph(self, paragraph):
@@ -267,6 +269,33 @@ class Formatting(object):
     def define_link_alias(self, paragraph, alias, value):
         self.markup.add_link_alias(alias, value)
         return paragraph
+
+    def table(self, paragraph):
+        SEPARATOR = ','
+        NUM_COLUMNS = 0
+
+        rows = []
+
+        if NUM_COLUMNS == 0:
+            lines = paragraph.splitlines()
+            for line in lines:
+                rows.append((line + '\n').split(SEPARATOR))
+
+        tbl = "<DIV ALIGN=center>"
+        tbl += "<TABLE  BORDER=1 >\n"
+
+        for row in rows:
+            tbl += "<TR>"
+
+            for col in row:
+                tbl += "<TD >"
+                tbl += col
+                tbl += "</TD>"
+
+            tbl += "</TR>"
+
+        tbl += "</TABLE></DIV>"
+        return tbl
 
 class Txt2Html(object):
     def __init__(self):

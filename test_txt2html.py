@@ -354,6 +354,18 @@ class TestSpecialCommands(unittest.TestCase):
                              "\n"
                              "</HTML>\n")
 
+class TestTableCommand(unittest.TestCase):
+    def setUp(self):
+        self.txt2html = txt2html.Txt2Html()
+
+    def test_single_table_row(self):
+        s = self.txt2html.convert("a,b,c :tb")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD >a</TD><TD >b</TD><TD >c \n"
+                          "</TD></TR></TABLE></DIV>\n"
+                          "</HTML>\n", s)
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
