@@ -274,7 +274,8 @@ class Formatting(object):
     def get_table_configuration(self, command):
         config = {
             'separator': ',',
-            'num_columns': 0
+            'num_columns': 0,
+            'border_width': 1
         }
 
         table_regex = r"^tb\((?P<configuration>.+)\)"
@@ -291,12 +292,15 @@ class Formatting(object):
                     config['num_columns'] = int(rhs)
                 elif lhs == 's':
                     config['separator'] = rhs
+                elif lhs == 'b':
+                    config['border_width'] = int(rhs)
 
         return config
 
     def table(self, paragraph, configuration):
         SEPARATOR = configuration['separator']
         NUM_COLUMNS = configuration['num_columns']
+        BORDER_WIDTH = configuration['border_width']
 
         rows = []
 
@@ -319,7 +323,7 @@ class Formatting(object):
                 rows.append(current_row)
 
         tbl = "<DIV ALIGN=center>"
-        tbl += "<TABLE  BORDER=1 >\n"
+        tbl += "<TABLE  BORDER=%d >\n" % BORDER_WIDTH
 
         for row_idx in range(len(rows)):
             columns = rows[row_idx]
