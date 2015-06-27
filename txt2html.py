@@ -289,6 +289,8 @@ class Formatting(object):
 
                 if lhs == 'c':
                     config['num_columns'] = int(rhs)
+                elif lhs == 's':
+                    config['separator'] = rhs
 
         return config
 
