@@ -276,7 +276,7 @@ class Formatting(object):
             'separator': ',',
             'num_columns': 0,
             'border_width': 1,
-            'alignment': 'center'
+            'table_alignment': 'center'
         }
 
         table_regex = r"^tb\((?P<configuration>.+)\)"
@@ -285,6 +285,7 @@ class Formatting(object):
         m = table_pattern.match(command)
         if m:
             entries = m.groups('configuration')[0].split(',')
+            alignments = {'l' : 'left', 'c': 'center', 'r' : 'right'}
 
             for entry in entries:
                 lhs, rhs = entry.split('=')
@@ -301,8 +302,9 @@ class Formatting(object):
                     else:
                         config['cell_width'] = rhs
                 elif lhs == "a":
-                    alignments = {'l' : 'left', 'c': 'center', 'r' : 'right'}
-                    config['alignment'] = alignments[rhs]
+                    config['table_alignment'] = alignments[rhs]
+                elif lhs == "ea":
+                    config['cell_alignment'] = alignments[rhs]
 
         return config
 
@@ -331,7 +333,7 @@ class Formatting(object):
             if len(current_row) > 0:
                 rows.append(current_row)
 
-        tbl = "<DIV ALIGN=%s>" % configuration['alignment']
+        tbl = "<DIV ALIGN=%s>" % configuration['table_alignment']
         tbl += "<TABLE  "
 
         if 'table_width' in configuration:
@@ -341,7 +343,12 @@ class Formatting(object):
 
         for row_idx in range(len(rows)):
             columns = rows[row_idx]
-            tbl += "<TR>"
+            tbl += "<TR"
+
+            if 'cell_alignment' in configuration:
+                tbl += " ALIGN=\"%s\"" % configuration['cell_alignment']
+
+            tbl += ">"
 
             for col_idx in range(len(columns)):
                 col = columns[col_idx]
