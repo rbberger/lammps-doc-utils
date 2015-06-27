@@ -363,7 +363,17 @@ class TestTableCommand(unittest.TestCase):
         self.assertEquals("<HTML>\n"
                           "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
                           "<TR><TD >a</TD><TD >b</TD><TD >c \n"
-                          "</TD></TR></TABLE></DIV>\n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "</HTML>\n", s)
+
+    def test_multiple_table_rows(self):
+        s = self.txt2html.convert("a,b,c,\nd,e,f,\ng,h,i :tb")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD >a</TD><TD >b</TD><TD >c</TD><TD ></TD></TR>\n"
+                          "<TR><TD >d</TD><TD >e</TD><TD >f</TD><TD ></TD></TR>\n"
+                          "<TR><TD >g</TD><TD >h</TD><TD >i \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
                           "</HTML>\n", s)
 
 class TestTxt2HtmlCLI(unittest.TestCase):

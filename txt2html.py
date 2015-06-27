@@ -279,22 +279,29 @@ class Formatting(object):
         if NUM_COLUMNS == 0:
             lines = paragraph.splitlines()
             for line in lines:
-                rows.append((line + '\n').split(SEPARATOR))
+                rows.append(line.split(SEPARATOR))
 
         tbl = "<DIV ALIGN=center>"
         tbl += "<TABLE  BORDER=1 >\n"
 
-        for row in rows:
+        for row_idx in range(len(rows)):
+            columns = rows[row_idx]
             tbl += "<TR>"
 
-            for col in row:
+            for col_idx in range(len(columns)):
+                col = columns[col_idx]
                 tbl += "<TD >"
                 tbl += col
-                tbl += "</TD>"
 
-            tbl += "</TR>"
+                if row_idx < len(rows) and col_idx < len(columns) - 1:
+                    tbl += "</TD>"
 
-        tbl += "</TABLE></DIV>"
+            if row_idx < len(rows) - 1:
+                tbl += "</TD></TR>\n"
+
+        tbl += "\n"
+        tbl += "</TD></TR>"
+        tbl += "</TABLE></DIV>\n"
         return tbl
 
 class Txt2Html(object):
