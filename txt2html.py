@@ -295,7 +295,10 @@ class Formatting(object):
                 elif lhs == 'b':
                     config['border_width'] = int(rhs)
                 elif lhs == 'w':
-                    config['cell_width'] = rhs
+                    if rhs.endswith("%"):
+                        config['table_width'] = rhs
+                    else:
+                        config['cell_width'] = rhs
 
         return config
 
@@ -325,7 +328,12 @@ class Formatting(object):
                 rows.append(current_row)
 
         tbl = "<DIV ALIGN=center>"
-        tbl += "<TABLE  BORDER=%d >\n" % BORDER_WIDTH
+        tbl += "<TABLE  "
+
+        if 'table_width' in configuration:
+            tbl += "WIDTH=\"%s\" " % configuration['table_width']
+
+        tbl += "BORDER=%d >\n" % BORDER_WIDTH
 
         for row_idx in range(len(rows)):
             columns = rows[row_idx]
