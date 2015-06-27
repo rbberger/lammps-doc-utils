@@ -1,9 +1,11 @@
 import unittest
-from txt2html import Txt2Html, Markup, Formatting
+import tempfile
+import io
+import txt2html
 
 class TestBasicFormatting(unittest.TestCase):
     def setUp(self):
-        self.txt2html = Txt2Html()
+        self.txt2html = txt2html.Txt2Html()
 
     def test_empty_string(self):
         self.assertEquals(self.txt2html.convert(""), "<HTML>\n"
@@ -40,7 +42,7 @@ class TestBasicFormatting(unittest.TestCase):
 
 class TestMarkup(unittest.TestCase):
     def setUp(self):
-        self.markup = Markup()
+        self.markup = txt2html.Markup()
 
     def test_bold(self):
         self.assertEquals("<B>bold</B>", self.markup.convert("[bold]"))
@@ -73,7 +75,7 @@ class TestMarkup(unittest.TestCase):
 
 class TestFormatting(unittest.TestCase):
     def setUp(self):
-        self.txt2html = Txt2Html()
+        self.txt2html = txt2html.Txt2Html()
 
     def test_paragraph_formatting(self):
         s = self.txt2html.convert("Hello :p\n")
@@ -190,7 +192,7 @@ class TestFormatting(unittest.TestCase):
 
 class TestListFormatting(unittest.TestCase):
     def setUp(self):
-        self.txt2html = Txt2Html()
+        self.txt2html = txt2html.Txt2Html()
 
     def test_unordered_list(self):
         s = self.txt2html.convert("one\n"
@@ -292,7 +294,7 @@ class TestListFormatting(unittest.TestCase):
 
 class TestSpecialCommands(unittest.TestCase):
     def setUp(self):
-        self.txt2html = Txt2Html()
+        self.txt2html = txt2html.Txt2Html()
 
     def test_line(self):
         s = self.txt2html.convert("one :line\n")
@@ -331,6 +333,23 @@ class TestSpecialCommands(unittest.TestCase):
                              "<P><A HREF = \"value\">test</A>\n"
                              "</P>\n"
                              "</HTML>\n")
+
+class TestTxt2HtmlCLI(unittest.TestCase):
+    def setUp(self):
+        self.out = io.StringIO()
+        self.err = io.StringIO()
+
+    def test_convert_single_file(self):
+        with tempfile.NamedTemporaryFile(mode='w+t') as f:
+            f.write('Hello World!\n')
+            f.flush()
+            args = [f.name]
+            txt2html.main(args=args, out=self.out, err=self.err)
+            self.assertEquals("<HTML>\n"
+                              "<P>Hello World!\n"
+                              "</P>\n"
+                              "</HTML>\n", self.out.getvalue())
+            self.assertEquals("Converting " + f.name + " ...\n", self.err.getvalue())
 
 if __name__ == '__main__':
     unittest.main()

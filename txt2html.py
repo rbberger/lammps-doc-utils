@@ -5,14 +5,14 @@ import re
 import sys
 import argparse
 
-parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into HTML.\nformatting & markup specification is given in README')
-parser.add_argument('-b', dest='breakflag', action='store_true',
-                   help='add a page-break comment to end of each HTML file. useful when set of HTML files will be converted to PDF')
-parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
-parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title based on first h1,h2,h3,h4... element')
-parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
+#parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into HTML.\nformatting & markup specification is given in README')
+#parser.add_argument('-b', dest='breakflag', action='store_true',
+#                   help='add a page-break comment to end of each HTML file. useful when set of HTML files will be converted to PDF')
+#parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
+#parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title based on first h1,h2,h3,h4... element')
+#parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
 
-args = parser.parse_args()
+#args = parser.parse_args()
 
 agetitle = ""
 aliases = {}
@@ -870,7 +870,7 @@ def substitute(s):
     return s
 
 
-def main():
+def main_old():
     # parse command-line options and args
     # setup list of files to process
     # npair = # of files to process
@@ -894,7 +894,7 @@ def main():
         # open files & message to screen
 
         infile, outfile = file_open(0, f)
-        print("Converting ", f, "...", file=sys.stderr)
+        print("Converting", f, "...", file=sys.stderr)
 
         lines = infile.readlines()
 
@@ -967,6 +967,24 @@ def main():
         infile.close()
         if outfile != sys.stdout:
             outfile.close()
+
+def get_argument_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file")
+    return parser
+
+def main(args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
+    parser = get_argument_parser()
+    parsed_args = parser.parse_args(args)
+
+    filename = parsed_args.file
+
+    with open(filename, 'r') as f:
+        print("Converting", filename, "...", file=err)
+        content = f.read()
+        converter = Txt2Html()
+        result = converter.convert(content)
+        print(result, end='', file=out)
 
 if __name__ == "__main__":
     main()
