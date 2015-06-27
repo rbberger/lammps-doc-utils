@@ -294,6 +294,8 @@ class Formatting(object):
                     config['separator'] = rhs
                 elif lhs == 'b':
                     config['border_width'] = int(rhs)
+                elif lhs == 'w':
+                    config['cell_width'] = rhs
 
         return config
 
@@ -331,7 +333,12 @@ class Formatting(object):
 
             for col_idx in range(len(columns)):
                 col = columns[col_idx]
-                tbl += "<TD >"
+                tbl += "<TD "
+
+                if 'cell_width' in configuration:
+                    tbl += "WIDTH=\"%s\"" % configuration['cell_width']
+
+                tbl += ">"
                 tbl += col
 
                 if row_idx < len(rows) and col_idx < len(columns) - 1:

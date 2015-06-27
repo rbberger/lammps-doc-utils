@@ -402,6 +402,14 @@ class TestTableCommand(unittest.TestCase):
                           "</TD></TR></TABLE></DIV>\n\n"
                           "</HTML>\n", s)
 
+    def test_change_cell_width(self):
+        s = self.txt2html.convert("a,b,c :tb(w=10)")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD WIDTH=\"10\">a</TD><TD WIDTH=\"10\">b</TD><TD WIDTH=\"10\">c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "</HTML>\n", s)
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
