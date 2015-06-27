@@ -277,10 +277,20 @@ class Txt2Html(object):
         converted = "<HTML>\n"
 
         if len(content) > 0:
-            for paragraph in self.paragraphs(content):
-                converted += self.convert_paragraph(paragraph)
+            self.parse_link_aliases(content)
+            converted += self.transform_paragraphs(content)
 
         converted += "</HTML>\n"
+        return converted
+
+    def parse_link_aliases(self, content):
+        for paragraph in self.paragraphs(content):
+            self.convert_paragraph(paragraph)
+
+    def transform_paragraphs(self, content):
+        converted = ""
+        for paragraph in self.paragraphs(content):
+            converted += self.convert_paragraph(paragraph)
         return converted
 
     def convert_paragraph(self, paragraph):

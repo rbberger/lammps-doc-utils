@@ -344,6 +344,16 @@ class TestSpecialCommands(unittest.TestCase):
                              "</P>\n"
                              "</HTML>\n")
 
+    def test_define_link_alias_later(self):
+        s = self.txt2html.convert("\"test\"_alias\n\n"
+                                  "one :link(alias,value)\n")
+        self.assertEquals(s, "<HTML>\n"
+                             "<P><A HREF = \"value\">test</A>\n"
+                             "</P>\n"
+                             "one \n"
+                             "\n"
+                             "</HTML>\n")
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
