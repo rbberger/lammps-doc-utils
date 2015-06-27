@@ -1072,21 +1072,32 @@ def main_old():
 
 def get_argument_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("file")
+    parser.add_argument("files", metavar="file", nargs="+")
     return parser
+
+def get_output_filename(path):
+    filename, ext = os.path.splitext(path)
+    return filename + ".html"
 
 def main(args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
     parser = get_argument_parser()
     parsed_args = parser.parse_args(args)
 
-    filename = parsed_args.file
+    write_to_files = len(parsed_args.files) > 1
 
-    with open(filename, 'r') as f:
-        print("Converting", filename, "...", file=err)
-        content = f.read()
-        converter = Txt2Html()
-        result = converter.convert(content)
-        print(result, end='', file=out)
+    for filename in parsed_args.files:
+        with open(filename, 'r') as f:
+            print("Converting", filename, "...", file=err)
+            content = f.read()
+            converter = Txt2Html()
+            result = converter.convert(content)
+
+            if write_to_files:
+                output_filename = get_output_filename(filename)
+                with open(output_filename, "w+t") as outfile:
+                    outfile.write(result)
+            else:
+                print(result, end='', file=out)
 
 if __name__ == "__main__":
     main()

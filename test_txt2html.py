@@ -1,6 +1,7 @@
 import unittest
 import tempfile
 import io
+import os
 import txt2html
 
 class TestBasicFormatting(unittest.TestCase):
@@ -450,6 +451,23 @@ class TestTxt2HtmlCLI(unittest.TestCase):
                               "</P>\n"
                               "</HTML>\n", self.out.getvalue())
             self.assertEquals("Converting " + f.name + " ...\n", self.err.getvalue())
+
+    def test_convert_multiple_files(self):
+        with tempfile.NamedTemporaryFile(mode='w+t') as f:
+            with tempfile.NamedTemporaryFile(mode='w+t') as g:
+                f.write('Hello World!\n')
+                f.flush()
+                g.write('Hello World!\n')
+                g.flush()
+                args = [f.name, g.name]
+                txt2html.main(args=args, out=self.out, err=self.err)
+                self.assertEquals("", self.out.getvalue())
+                self.assertEquals("Converting " + f.name + " ...\n"
+                                  "Converting " + g.name + " ...\n", self.err.getvalue())
+                self.assertTrue(os.path.exists(f.name + ".html"))
+                self.assertTrue(os.path.exists(g.name + ".html"))
+                os.remove(f.name + ".html")
+                os.remove(g.name + ".html")
 
 if __name__ == '__main__':
     unittest.main()
