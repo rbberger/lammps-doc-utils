@@ -394,8 +394,8 @@ class Txt2Html(object):
             return paragraph + '\n'
 
         if self.has_formatting(paragraph):
-            paragraph = self.do_formatting(paragraph)
-            return self.do_markup(paragraph)
+            paragraph = self.do_markup(paragraph)
+            return self.do_formatting(paragraph)
 
         return "<P>" + self.do_markup(paragraph) + "</P>\n"
 

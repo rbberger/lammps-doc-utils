@@ -183,6 +183,17 @@ class TestFormatting(unittest.TestCase):
                           "\n"
                           "</HTML>\n", s)
 
+    def test_links_with_all_breaks(self):
+        s = self.txt2html.convert("\"one\"_link\n"
+                                  "\"two\"_link\n"
+                                  "\"three\"_link :all(b)\n")
+        self.assertEquals("<HTML>\n"
+                          "<A HREF = \"link\">one</A><BR>\n"
+                          "<A HREF = \"link\">two</A><BR>\n"
+                          "<A HREF = \"link\">three</A> <BR>\n"
+                          "\n"
+                          "</HTML>\n", s)
+
     def test_all_list_items(self):
         s = self.txt2html.convert("one\n"
                                   "two\n"
