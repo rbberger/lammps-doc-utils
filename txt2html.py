@@ -275,7 +275,8 @@ class Formatting(object):
         config = {
             'separator': ',',
             'num_columns': 0,
-            'border_width': 1
+            'border_width': 1,
+            'alignment': 'center'
         }
 
         table_regex = r"^tb\((?P<configuration>.+)\)"
@@ -299,6 +300,9 @@ class Formatting(object):
                         config['table_width'] = rhs
                     else:
                         config['cell_width'] = rhs
+                elif lhs == "a":
+                    alignments = {'l' : 'left', 'c': 'center', 'r' : 'right'}
+                    config['alignment'] = alignments[rhs]
 
         return config
 
@@ -327,7 +331,7 @@ class Formatting(object):
             if len(current_row) > 0:
                 rows.append(current_row)
 
-        tbl = "<DIV ALIGN=center>"
+        tbl = "<DIV ALIGN=%s>" % configuration['alignment']
         tbl += "<TABLE  "
 
         if 'table_width' in configuration:

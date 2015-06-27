@@ -418,6 +418,22 @@ class TestTableCommand(unittest.TestCase):
                           "</TD></TR></TABLE></DIV>\n\n"
                           "</HTML>\n", s)
 
+    def test_change_table_alignment(self):
+        s = self.txt2html.convert("a :tb(a=l)\n"
+                                  "b :tb(a=c)\n"
+                                  "c :tb(a=r)\n")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=left><TABLE  BORDER=1 >\n"
+                          "<TR><TD >a \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD >b \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=right><TABLE  BORDER=1 >\n"
+                          "<TR><TD >c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "</HTML>\n", s)
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
