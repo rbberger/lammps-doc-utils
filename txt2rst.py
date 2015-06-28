@@ -32,6 +32,9 @@ class RSTFormatting(Formatting):
     def paragraph(self, content):
         return content.strip() + "\n"
 
+    def linebreak(self, content):
+        return content.strip()
+
     def header(self, content, level):
         header_content = content.strip()
         header_underline = RSTFormatting.RST_HEADER_TYPES[level-1] * len(header_content)

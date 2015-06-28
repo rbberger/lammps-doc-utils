@@ -59,6 +59,10 @@ class TestFormatting(unittest.TestCase):
                             "Bye\n"
                             "\n")
 
+    def test_break_formatting(self):
+        s = self.txt2rst.convert("Hello :b\n")
+        self.assertEqual("Hello\n", s)
+
     def test_header_formatting(self):
         s = self.txt2rst.convert("Level 1 :h1\n"
                                  "Level 2 :h2\n"
