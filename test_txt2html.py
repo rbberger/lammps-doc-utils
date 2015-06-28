@@ -562,5 +562,17 @@ class TestTxt2HtmlCLI(unittest.TestCase):
                 os.remove(f.name + ".html")
                 os.remove(g.name + ".html")
 
+    def test_break_flag(self):
+        with tempfile.NamedTemporaryFile(mode='w+t') as f:
+            f.write('Hello World!\n')
+            f.flush()
+            args = ["-b", f.name]
+            txt2html.main(args=args, out=self.out, err=self.err)
+            self.assertEquals("<HTML>\n"
+                              "<P>Hello World!\n"
+                              "</P>\n"
+                              "<!-- PAGE BREAK -->\n"
+                              "</HTML>\n", self.out.getvalue())
+
 if __name__ == '__main__':
     unittest.main()

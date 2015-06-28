@@ -366,6 +366,7 @@ class Txt2Html(object):
     def __init__(self):
         self.markup = Markup()
         self.format = Formatting(self.markup)
+        self.append_page_break = False
 
     def convert(self, content):
         converted = "<HTML>\n"
@@ -373,6 +374,9 @@ class Txt2Html(object):
         if len(content) > 0:
             self.parse_link_aliases(content)
             converted += self.transform_paragraphs(content)
+
+        if self.append_page_break:
+            converted += "<!-- PAGE BREAK -->\n"
 
         converted += "</HTML>\n"
         return converted
@@ -467,9 +471,9 @@ class Txt2Html(object):
 def get_argument_parser():
     parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into HTML.\n'
                                                  'formatting & markup specification is given in README')
-    #parser.add_argument('-b', dest='breakflag', action='store_true', help='add a page-break comment to end of each HTML'
-    #                                                                      ' file. useful when set of HTML files will be'
-    #                                                                      ' converted to PDF')
+    parser.add_argument('-b', dest='breakflag', action='store_true', help='add a page-break comment to end of each HTML'
+                                                                          ' file. useful when set of HTML files will be'
+                                                                          ' converted to PDF')
     #parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
     #parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title based on first h1,h2,h3,h4... element')
     parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
@@ -490,6 +494,10 @@ def main(args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
             print("Converting", filename, "...", file=err)
             content = f.read()
             converter = Txt2Html()
+
+            if parsed_args.breakflag:
+                converter.append_page_break = True
+
             result = converter.convert(content)
 
             if write_to_files:
