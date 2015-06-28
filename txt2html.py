@@ -397,6 +397,9 @@ class HTMLFormatting(Formatting):
     def end_document(self):
         return "</HTML>\n"
 
+    def raw_html(self, content):
+        return content
+
 class TxtParser(object):
     def __init__(self):
         self.markup = HTMLMarkup()
@@ -437,7 +440,7 @@ class TxtParser(object):
 
     def convert_paragraph(self, paragraph):
         if self.is_raw_html_paragraph(paragraph):
-            return paragraph + '\n'
+            return self.format.raw_html(paragraph) + '\n'
 
         if self.has_formatting(paragraph):
             paragraph = self.do_markup(paragraph)

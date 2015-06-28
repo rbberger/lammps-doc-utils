@@ -1,6 +1,30 @@
 import unittest
 import txt2rst
 
+class TestBasicFormatting(unittest.TestCase):
+    def setUp(self):
+        self.txt2rst = txt2rst.Txt2Rst()
+
+    def test_empty_string(self):
+        self.assertEqual(self.txt2rst.convert(""), "")
+
+    def test_single_paragraph(self):
+        self.assertEqual("Hello World!\n\n", self.txt2rst.convert("Hello World!\n"))
+
+    def test_two_paragraphs(self):
+        s = self.txt2rst.convert("Hello World!\n\nBye World!\n")
+        self.assertEqual("Hello World!\n\n"
+                         "Bye World!\n\n", s)
+
+    def test_line_concat(self):
+        s = self.txt2rst.convert("Hello World!\\\nBye World!\n")
+        self.assertEqual(s, "Hello World!Bye World!\n\n")
+
+    def test_html_pass_through(self):
+        s = self.txt2rst.convert("<div>Raw HTML</div>\n")
+        self.assertEqual(s, ".. raw:: html\n\n"
+                            "   <div>Raw HTML</div>\n\n")
+
 class TestMarkup(unittest.TestCase):
     def setUp(self):
         self.markup = txt2rst.RSTMarkup()

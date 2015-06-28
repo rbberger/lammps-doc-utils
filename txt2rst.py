@@ -43,6 +43,16 @@ class RSTFormatting(Formatting):
     def end_document(self):
         return ""
 
+    def raw_html(self, content):
+        raw_directive = ".. raw:: html\n\n"
+        return raw_directive + self.indent(content)
+
+    def indent(self, content):
+        indented = ""
+        for line in content.splitlines():
+            indented += "   %s\n" % line
+        return indented
+
 class Txt2Rst(TxtParser):
     def __init__(self):
         super().__init__()
