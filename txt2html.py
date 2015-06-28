@@ -417,7 +417,7 @@ class Txt2Html(object):
             paragraph = self.do_markup(paragraph)
             return self.do_formatting(paragraph)
 
-        return "<P>" + self.do_markup(paragraph) + "</P>\n"
+        return self.format.paragraph(self.do_markup(paragraph)) + "\n"
 
     def has_formatting(self, paragraph):
         return self.last_word(paragraph).startswith(":")
