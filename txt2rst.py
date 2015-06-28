@@ -5,7 +5,7 @@ import os
 import re
 import sys
 import argparse
-from txt2html import Markup
+from txt2html import Markup, Formatting, TxtParser
 
 class RSTMarkup(Markup):
     def __init__(self):
@@ -22,6 +22,25 @@ class RSTMarkup(Markup):
 
     def italic_end(self):
         return "*"
+
+class RSTFormatting(Formatting):
+    def __init__(self, markup):
+        super().__init__(markup)
+
+    def paragraph(self, content):
+        return content.strip() + "\n"
+
+    def begin_document(self):
+        return ""
+
+    def end_document(self):
+        return ""
+
+class Txt2Rst(TxtParser):
+    def __init__(self):
+        super().__init__()
+        self.markup = RSTMarkup()
+        self.format = RSTFormatting(self.markup)
 
 parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into ReStructured Text.\nformatting & markup specification is given in README')
 parser.add_argument('-b', dest='breakflag', action='store_true',

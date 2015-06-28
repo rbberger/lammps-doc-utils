@@ -391,7 +391,13 @@ class HTMLFormatting(Formatting):
     def __init__(self, markup):
         super().__init__(markup)
 
-class Txt2Html(object):
+    def begin_document(self):
+        return "<HTML>\n"
+
+    def end_document(self):
+        return "<HTML>\n"
+
+class TxtParser(object):
     def __init__(self):
         self.markup = HTMLMarkup()
         self.format = HTMLFormatting(self.markup)
@@ -400,7 +406,7 @@ class Txt2Html(object):
         self.page_title = ""
 
     def convert(self, content):
-        converted = "<HTML>\n"
+        converted = self.format.begin_document()
 
         if len(content) > 0:
             self.parse_link_aliases_and_find_title(content)
@@ -415,7 +421,7 @@ class Txt2Html(object):
         if self.append_page_break:
             converted += "<!-- PAGE BREAK -->\n"
 
-        converted += "</HTML>\n"
+        converted += self.format.end_document()
         return converted
 
     def parse_link_aliases_and_find_title(self, content):
@@ -505,6 +511,12 @@ class Txt2Html(object):
                 current_line = ""
 
             i += 1
+
+class Txt2Html(TxtParser):
+    def __init__(self):
+        super().__init__()
+        self.markup = HTMLMarkup()
+        self.format = HTMLFormatting(self.markup)
 
 def get_argument_parser():
     parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into HTML.\n'
