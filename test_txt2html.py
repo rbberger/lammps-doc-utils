@@ -589,5 +589,19 @@ class TestTxt2HtmlCLI(unittest.TestCase):
                 self.assertFalse(os.path.exists(g.name + ".html"))
                 os.remove(f.name + ".html")
 
+    def test_create_title_option(self):
+        with tempfile.NamedTemporaryFile(mode='w+t') as f:
+            f.write('Hello World! :h1\n')
+            f.flush()
+            args = ["--generate-title", f.name]
+            txt2html.main(args=args, out=self.out, err=self.err)
+            self.assertEquals("<HTML>\n"
+                              "<HEAD>\n"
+                              "<TITLE>Hello World!</TITLE>\n"
+                              "</HEAD>\n"
+                              "<H1>Hello World! \n"
+                              "</H1>\n"
+                              "</HTML>\n", self.out.getvalue())
+
 if __name__ == '__main__':
     unittest.main()

@@ -68,6 +68,7 @@ class Formatting(object):
         self.named_link_pattern = re.compile(named_link_regex)
         self.define_link_alias_pattern = re.compile(define_link_alias_regex)
         self.markup = markup
+        self.first_header = ""
 
     def convert(self, command, paragraph):
         if command == "p":
@@ -144,6 +145,8 @@ class Formatting(object):
         return "<CENTER>" + paragraph + "</CENTER>"
 
     def header(self, paragraph, level):
+        if self.first_header == "":
+            self.first_header = paragraph.strip()
         return "<H%d>%s</H%d>" % (level, paragraph, level)
 
     def unordered_list(self, paragraph):
@@ -367,12 +370,20 @@ class Txt2Html(object):
         self.markup = Markup()
         self.format = Formatting(self.markup)
         self.append_page_break = False
+        self.create_title = False
+        self.page_title = ""
 
     def convert(self, content):
         converted = "<HTML>\n"
 
         if len(content) > 0:
-            self.parse_link_aliases(content)
+            self.parse_link_aliases_and_find_title(content)
+
+            if self.create_title and self.page_title != "":
+                converted += "<HEAD>\n"
+                converted += "<TITLE>%s</TITLE>\n" % self.page_title
+                converted += "</HEAD>\n"
+
             converted += self.transform_paragraphs(content)
 
         if self.append_page_break:
@@ -381,9 +392,10 @@ class Txt2Html(object):
         converted += "</HTML>\n"
         return converted
 
-    def parse_link_aliases(self, content):
+    def parse_link_aliases_and_find_title(self, content):
         for paragraph in self.paragraphs(content):
             self.convert_paragraph(paragraph)
+        self.page_title = self.format.first_header
 
     def transform_paragraphs(self, content):
         converted = ""
@@ -475,7 +487,9 @@ def get_argument_parser():
                                                                           ' file. useful when set of HTML files will be'
                                                                           ' converted to PDF')
     parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
-    #parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title based on first h1,h2,h3,h4... element')
+    parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title '
+                                                                                           'based on first h1,h2,h3,'
+                                                                                           'h4... element')
     parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
     return parser
 
@@ -497,9 +511,8 @@ def main(args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
             print("Converting", filename, "...", file=err)
             content = f.read()
             converter = Txt2Html()
-
-            if parsed_args.breakflag:
-                converter.append_page_break = True
+            converter.append_page_break = parsed_args.breakflag
+            converter.create_title = parsed_args.create_title
 
             result = converter.convert(content)
 
