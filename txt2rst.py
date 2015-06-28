@@ -5,6 +5,23 @@ import os
 import re
 import sys
 import argparse
+from txt2html import Markup
+
+class RSTMarkup(Markup):
+    def __init__(self):
+        super().__init__()
+
+    def bold_start(self):
+        return "**"
+
+    def bold_end(self):
+        return "**"
+
+    def italic_start(self):
+        return "*"
+
+    def italic_end(self):
+        return "*"
 
 parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into ReStructured Text.\nformatting & markup specification is given in README')
 parser.add_argument('-b', dest='breakflag', action='store_true',
