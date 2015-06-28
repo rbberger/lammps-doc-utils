@@ -399,7 +399,7 @@ class TestTableCommand(unittest.TestCase):
                           "</HTML>\n", s)
 
     def test_change_cell_separator(self):
-        s = self.txt2html.convert("a:b:c :tb(s=:)")
+        s = self.txt2html.convert("a:b:c :tb(s=:)\n")
         self.assertEquals("<HTML>\n"
                           "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
                           "<TR><TD >a</TD><TD >b</TD><TD >c \n"
