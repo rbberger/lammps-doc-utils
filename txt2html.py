@@ -313,6 +313,11 @@ class Formatting(object):
                     if 'custom_cell_width' not in config:
                         config['custom_cell_width'] = {}
                     config['custom_cell_width'][column] = rhs
+                elif lhs.startswith("ca") and len(lhs) >= 3:
+                    column = int(lhs[2:]) - 1
+                    if 'custom_cell_alignment' not in config:
+                        config['custom_cell_alignment'] = {}
+                    config['custom_cell_alignment'][column] = alignments[rhs]
 
         return config
 
@@ -371,6 +376,10 @@ class Formatting(object):
                 else:
                     if 'cell_width' in configuration:
                         tbl += "WIDTH=\"%s\"" % configuration['cell_width']
+
+                if 'custom_cell_alignment' in configuration:
+                    if col_idx in configuration['custom_cell_alignment']:
+                        tbl += " ALIGN =\"%s\"" % configuration['custom_cell_alignment'][col_idx]
 
                 tbl += ">"
                 tbl += col

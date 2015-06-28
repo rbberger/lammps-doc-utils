@@ -494,6 +494,22 @@ class TestTableCommand(unittest.TestCase):
                           "</TD></TR></TABLE></DIV>\n\n"
                           "</HTML>\n", s)
 
+    def test_custom_column_alignment(self):
+        s = self.txt2html.convert("a,b,c :tb(w=30,ca1=l)\n"
+                                  "a,b,c :tb(ca2=c)\n"
+                                  "a,b,c :tb(ca3=r)\n")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD WIDTH=\"30\" ALIGN =\"left\">a</TD><TD WIDTH=\"30\">b</TD><TD WIDTH=\"30\">c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD >a</TD><TD  ALIGN =\"center\">b</TD><TD >c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD >a</TD><TD >b</TD><TD  ALIGN =\"right\">c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "</HTML>\n", s)
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
