@@ -308,6 +308,11 @@ class Formatting(object):
                     config['cell_alignment'] = alignments[rhs]
                 elif lhs == "eva":
                     config['cell_vertical_alignment'] = vertical_alignments[rhs]
+                elif lhs.startswith("cw") and len(lhs) >= 3:
+                    column = int(lhs[2:]) - 1
+                    if 'custom_cell_width' not in config:
+                        config['custom_cell_width'] = {}
+                    config['custom_cell_width'][column] = rhs
 
         return config
 
@@ -360,8 +365,12 @@ class Formatting(object):
                 col = columns[col_idx]
                 tbl += "<TD "
 
-                if 'cell_width' in configuration:
-                    tbl += "WIDTH=\"%s\"" % configuration['cell_width']
+                if 'custom_cell_width' in configuration:
+                    if col_idx in configuration['custom_cell_width']:
+                        tbl += "WIDTH=\"%s\"" % configuration['custom_cell_width'][col_idx]
+                else:
+                    if 'cell_width' in configuration:
+                        tbl += "WIDTH=\"%s\"" % configuration['cell_width']
 
                 tbl += ">"
                 tbl += col

@@ -482,6 +482,18 @@ class TestTableCommand(unittest.TestCase):
                           "</TD></TR></TABLE></DIV>\n\n"
                           "</HTML>\n", s)
 
+    def test_custom_column_width(self):
+        s = self.txt2html.convert("a,b,c :tb(cw1=30)\n"
+                                  "a,b,c :tb(cw2=30%)\n")
+        self.assertEquals("<HTML>\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD WIDTH=\"30\">a</TD><TD >b</TD><TD >c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "<DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                          "<TR><TD >a</TD><TD WIDTH=\"30%\">b</TD><TD >c \n"
+                          "</TD></TR></TABLE></DIV>\n\n"
+                          "</HTML>\n", s)
+
 class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
