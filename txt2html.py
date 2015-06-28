@@ -31,8 +31,8 @@ class Markup(object):
     def bold(self, text):
         text = text.replace("\\" + Markup.BOLD_START, Markup.START_PLACEHOLDER)
         text = text.replace("\\" + Markup.BOLD_END, Markup.END_PLACEHOLDER)
-        text = text.replace(Markup.BOLD_START, "<B>")
-        text = text.replace(Markup.BOLD_END, "</B>")
+        text = text.replace(Markup.BOLD_START, self.bold_start())
+        text = text.replace(Markup.BOLD_END, self.bold_end())
         text = text.replace(Markup.START_PLACEHOLDER, Markup.BOLD_START)
         text = text.replace(Markup.END_PLACEHOLDER, Markup.BOLD_END)
         return text
@@ -40,8 +40,8 @@ class Markup(object):
     def italic(self, text):
         text = text.replace("\\" + Markup.ITALIC_START, Markup.START_PLACEHOLDER)
         text = text.replace("\\" + Markup.ITALIC_END, Markup.END_PLACEHOLDER)
-        text = text.replace(Markup.ITALIC_START, "<I>")
-        text = text.replace(Markup.ITALIC_END, "</I>")
+        text = text.replace(Markup.ITALIC_START, self.italic_start())
+        text = text.replace(Markup.ITALIC_END, self.italic_end())
         text = text.replace(Markup.START_PLACEHOLDER, Markup.ITALIC_START)
         text = text.replace(Markup.END_PLACEHOLDER, Markup.ITALIC_END)
         return text
@@ -55,9 +55,28 @@ class Markup(object):
             else:
                 href = link
 
-            href = "<A HREF = \"" + href + "\">" + name + "</A>"
+            href = self.create_link(name, href)
             text = text.replace('\"%s\"_%s' % (name, link), href, 1)
         return text
+
+class HTMLMarkup(Markup):
+    def __init__(self):
+        super().__init__()
+
+    def bold_start(self):
+        return "<B>"
+
+    def bold_end(self):
+        return "</B>"
+
+    def italic_start(self):
+        return "<I>"
+
+    def italic_end(self):
+        return "</I>"
+
+    def create_link(self, content, href):
+        return "<A HREF = \"" + href + "\">" + content + "</A>"
 
 class Formatting(object):
     def __init__(self, markup):
@@ -374,7 +393,7 @@ class HTMLFormatting(Formatting):
 
 class Txt2Html(object):
     def __init__(self):
-        self.markup = Markup()
+        self.markup = HTMLMarkup()
         self.format = HTMLFormatting(self.markup)
         self.append_page_break = False
         self.create_title = False

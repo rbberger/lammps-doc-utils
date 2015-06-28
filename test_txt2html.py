@@ -43,7 +43,7 @@ class TestBasicFormatting(unittest.TestCase):
 
 class TestMarkup(unittest.TestCase):
     def setUp(self):
-        self.markup = txt2html.Markup()
+        self.markup = txt2html.HTMLMarkup()
         self.txt2html = txt2html.Txt2Html()
 
     def test_bold(self):
