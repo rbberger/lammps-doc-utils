@@ -24,11 +24,18 @@ class RSTMarkup(Markup):
         return "*"
 
 class RSTFormatting(Formatting):
+    RST_HEADER_TYPES = '#*=-^"'
+
     def __init__(self, markup):
         super().__init__(markup)
 
     def paragraph(self, content):
         return content.strip() + "\n"
+
+    def header(self, content, level):
+        header_content = content.strip()
+        header_underline = RSTFormatting.RST_HEADER_TYPES[level-1] * len(header_content)
+        return header_content + "\n" + header_underline + "\n"
 
     def begin_document(self):
         return ""
