@@ -574,5 +574,20 @@ class TestTxt2HtmlCLI(unittest.TestCase):
                               "<!-- PAGE BREAK -->\n"
                               "</HTML>\n", self.out.getvalue())
 
+    def test_skip_files(self):
+        with tempfile.NamedTemporaryFile(mode='w+t') as f:
+            with tempfile.NamedTemporaryFile(mode='w+t') as g:
+                f.write('Hello World!\n')
+                f.flush()
+                g.write('Hello World!\n')
+                g.flush()
+                args = ["-x", g.name, f.name, g.name]
+                txt2html.main(args=args, out=self.out, err=self.err)
+                self.assertEquals("", self.out.getvalue())
+                self.assertEquals("Converting " + f.name + " ...\n", self.err.getvalue())
+                self.assertTrue(os.path.exists(f.name + ".html"))
+                self.assertFalse(os.path.exists(g.name + ".html"))
+                os.remove(f.name + ".html")
+
 if __name__ == '__main__':
     unittest.main()

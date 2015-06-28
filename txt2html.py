@@ -474,7 +474,7 @@ def get_argument_parser():
     parser.add_argument('-b', dest='breakflag', action='store_true', help='add a page-break comment to end of each HTML'
                                                                           ' file. useful when set of HTML files will be'
                                                                           ' converted to PDF')
-    #parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
+    parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
     #parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title based on first h1,h2,h3,h4... element')
     parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
     return parser
@@ -490,6 +490,9 @@ def main(args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
     write_to_files = len(parsed_args.files) > 1
 
     for filename in parsed_args.files:
+        if parsed_args.skip_files and filename in parsed_args.skip_files:
+            continue
+
         with open(filename, 'r') as f:
             print("Converting", filename, "...", file=err)
             content = f.read()
