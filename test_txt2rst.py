@@ -63,6 +63,11 @@ class TestFormatting(unittest.TestCase):
         s = self.txt2rst.convert("Hello :b\n")
         self.assertEqual("Hello\n", s)
 
+    def test_preformat_formatting(self):
+        s = self.txt2rst.convert("Hello :pre\n")
+        self.assertEqual("::\n\n"
+                         "   Hello\n\n", s)
+
     def test_header_formatting(self):
         s = self.txt2rst.convert("Level 1 :h1\n"
                                  "Level 2 :h2\n"
