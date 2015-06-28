@@ -35,6 +35,12 @@ class TestMarkup(unittest.TestCase):
     def test_italic(self):
         self.assertEqual("*italic*", self.markup.convert("{italic}"))
 
+    def test_escape_markup(self):
+        s = self.markup.convert("[bold] = \\[bold\\]\n"
+                                "{italic} = \\{italic\\}\n")
+        self.assertEqual("**bold** = [bold]\n"
+                         "*italic* = {italic}\n", s)
+
 class TestFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()
