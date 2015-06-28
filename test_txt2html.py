@@ -194,6 +194,13 @@ class TestFormatting(unittest.TestCase):
                           "\n"
                           "</HTML>\n", s)
 
+    def test_two_similar_links(self):
+        s = self.txt2html.convert("\"one\"_linkA and \"one\"_linkAB\n")
+        self.assertEquals("<HTML>\n"
+                          "<P><A HREF = \"linkA\">one</A> and <A HREF = \"linkAB\">one</A>\n"
+                          "</P>\n"
+                          "</HTML>\n", s)
+
     def test_all_breaks_in_paragraph(self):
         s = self.txt2html.convert("one\n"
                                   "two\n"

@@ -86,7 +86,7 @@ class Markup(object):
                 href = link
 
             href = "<A HREF = \"" + href + "\">" + name + "</A>"
-            text = text.replace('\"%s\"_%s' % (name, link), href)
+            text = text.replace('\"%s\"_%s' % (name, link), href, 1)
         return text
 
 class Formatting(object):
