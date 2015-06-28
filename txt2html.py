@@ -150,32 +150,29 @@ class Formatting(object):
         return "<H%d>%s</H%d>" % (level, paragraph, level)
 
     def unordered_list(self, paragraph):
-        converted = "<UL>"
+        converted = self.unordered_list_begin("")
         for line in paragraph.splitlines():
-            converted += "<LI>" + line + "\n"
-        converted += "</UL>"
-        return converted
+            converted += self.list_item(line) + "\n"
+        return self.unordered_list_end(converted)
 
     def ordered_list(self, paragraph):
-        converted = "<OL>"
+        converted = self.ordered_list_begin("")
         for line in paragraph.splitlines():
-            converted += "<LI>" + line + "\n"
-        converted += "</OL>"
-        return converted
+            converted += self.list_item(line) + "\n"
+        return self.ordered_list_end(converted)
 
     def definition_list(self, paragraph):
-        converted = "<DL>"
+        converted = self.definition_list_begin("")
         is_title = True
         for line in paragraph.splitlines():
             if is_title:
-                converted += "<DT>" + line + "\n"
+                converted += self.definition_term(line) + "\n"
             else:
-                converted += "<DD>" + line + "\n"
+                converted += self.definition_description(line) + "\n"
 
             is_title = not is_title
 
-        converted += "</DL>"
-        return converted
+        return self.definition_list_end(converted)
 
     def list_item(self, paragraph):
         return "<LI>" + paragraph
@@ -207,13 +204,13 @@ class Formatting(object):
     def all_paragraphs(self, paragraph):
         converted = ""
         for line in paragraph.splitlines():
-            converted += "<P>" + line + "</P>\n"
+            converted += self.paragraph(line) + "\n"
         return converted
 
     def all_centered(self, paragraph):
         converted = ""
         for line in paragraph.splitlines():
-            converted += "<CENTER>" + line + "</CENTER>\n"
+            converted += self.center(line) + "\n"
         return converted
 
     def all_breaks(self, paragraph):
@@ -222,7 +219,7 @@ class Formatting(object):
     def all_list_items(self, paragraph):
         converted = ""
         for line in paragraph.splitlines():
-            converted += "<LI>" + line + "\n"
+            converted += self.list_item(line) + "\n"
         return converted
 
     def horizontal_rule(self, paragraph):
@@ -371,10 +368,14 @@ class Formatting(object):
 
         return rows
 
+class HTMLFormatting(Formatting):
+    def __init__(self, markup):
+        super().__init__(markup)
+
 class Txt2Html(object):
     def __init__(self):
         self.markup = Markup()
-        self.format = Formatting(self.markup)
+        self.format = HTMLFormatting(self.markup)
         self.append_page_break = False
         self.create_title = False
         self.page_title = ""
