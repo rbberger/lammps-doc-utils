@@ -395,7 +395,7 @@ class HTMLFormatting(Formatting):
         return "<HTML>\n"
 
     def end_document(self):
-        return "<HTML>\n"
+        return "</HTML>\n"
 
 class TxtParser(object):
     def __init__(self):
