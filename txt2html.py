@@ -244,10 +244,7 @@ class Formatting(object):
         return converted
 
     def all_breaks(self, paragraph):
-        converted = ""
-        for line in paragraph.splitlines():
-            converted += line + "<BR>\n"
-        return converted
+        return paragraph.replace("\n", "<BR>\n")
 
     def all_list_items(self, paragraph):
         converted = ""

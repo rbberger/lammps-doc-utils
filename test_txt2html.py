@@ -194,6 +194,17 @@ class TestFormatting(unittest.TestCase):
                           "\n"
                           "</HTML>\n", s)
 
+    def test_all_breaks_in_paragraph(self):
+        s = self.txt2html.convert("one\n"
+                                  "two\n"
+                                  "three :all(b),p\n")
+        self.assertEquals("<HTML>\n"
+                          "<P>one<BR>\n"
+                          "two<BR>\n"
+                          "three <BR>\n"
+                          "</P>\n"
+                          "</HTML>\n", s)
+
     def test_all_list_items(self):
         s = self.txt2html.convert("one\n"
                                   "two\n"
