@@ -292,29 +292,11 @@ class Formatting(object):
         return config
 
     def table(self, paragraph, configuration):
-        SEPARATOR = configuration['separator']
-        NUM_COLUMNS = configuration['num_columns']
-        BORDER_WIDTH = configuration['border_width']
-
-        rows = []
-
-        if NUM_COLUMNS == 0:
-            lines = paragraph.splitlines()
-            for line in lines:
-                rows.append(line.split(SEPARATOR))
+        if configuration['num_columns'] == 0:
+            rows = self.create_table_with_columns_based_on_newlines(paragraph, configuration['separator'])
         else:
-            cells = paragraph.split(SEPARATOR)
-            current_row = []
-
-            for cell in cells:
-                current_row.append(cell.strip('\n'))
-
-                if len(current_row) == NUM_COLUMNS:
-                    rows.append(current_row)
-                    current_row = []
-
-            if len(current_row) > 0:
-                rows.append(current_row)
+            rows = self.create_table_with_fixed_number_of_columns(paragraph, configuration['separator'],
+                                                                  configuration['num_columns'])
 
         tbl = "<DIV ALIGN=%s>" % configuration['table_alignment']
         tbl += "<TABLE  "
@@ -322,7 +304,7 @@ class Formatting(object):
         if 'table_width' in configuration:
             tbl += "WIDTH=\"%s\" " % configuration['table_width']
 
-        tbl += "BORDER=%d >\n" % BORDER_WIDTH
+        tbl += "BORDER=%d >\n" % configuration['border_width']
 
         for row_idx in range(len(rows)):
             columns = rows[row_idx]
@@ -364,6 +346,30 @@ class Formatting(object):
         tbl += "</TD></TR>"
         tbl += "</TABLE></DIV>\n"
         return tbl
+
+    def create_table_with_columns_based_on_newlines(self, paragraph, separator):
+        rows = []
+        lines = paragraph.splitlines()
+        for line in lines:
+            rows.append(line.split(separator))
+        return rows
+
+    def create_table_with_fixed_number_of_columns(self, paragraph, separator, num_columns):
+        cells = paragraph.split(separator)
+        current_row = []
+        rows = []
+
+        for cell in cells:
+            current_row.append(cell.strip('\n'))
+
+            if len(current_row) == num_columns:
+                rows.append(current_row)
+                current_row = []
+
+        if len(current_row) > 0:
+            rows.append(current_row)
+
+        return rows
 
 class Txt2Html(object):
     def __init__(self):
