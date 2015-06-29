@@ -24,7 +24,9 @@ class RSTMarkup(Markup):
         return "*"
 
     def create_link(self, content, href):
-        return "`%s <%s>`_" % (content.strip(), href)
+        content = content.strip()
+        content = content.replace('\n', '')
+        return "`%s <%s>`_" % (content, href)
 
 class RSTFormatting(Formatting):
     RST_HEADER_TYPES = '#*=-^"'

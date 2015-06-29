@@ -30,6 +30,7 @@ class TestBasicFormatting(unittest.TestCase):
 class TestMarkup(unittest.TestCase):
     def setUp(self):
         self.markup = txt2rst.RSTMarkup()
+        self.txt2rst = txt2rst.Txt2Rst()
 
     def test_bold(self):
         self.assertEqual("**bold**", self.markup.convert("[bold]"))
@@ -45,6 +46,21 @@ class TestMarkup(unittest.TestCase):
 
     def test_link_markup(self):
         self.assertEqual("`Text <link>`_", self.markup.convert('"Text"_link'))
+
+    def test_multiline_link_markup(self):
+        s = self.txt2rst.convert('"Te\n'
+                                  'xt"_link\n')
+        self.assertEqual("`Text <link>`_\n\n", s)
+
+    def test_ignore_punctuation_in_link(self):
+        self.assertEqual("`Text <link>`_.", self.markup.convert('"Text"_link.'))
+        self.assertEqual("`Text <link>`_,", self.markup.convert('"Text"_link,'))
+        self.assertEqual("`Text <link>`_;", self.markup.convert('"Text"_link;'))
+        self.assertEqual("`Text <link>`_:", self.markup.convert('"Text"_link:'))
+        self.assertEqual("`Text <link>`_?", self.markup.convert('"Text"_link?'))
+        self.assertEqual("`Text <link>`_!", self.markup.convert('"Text"_link!'))
+        self.assertEqual("`Text <link>`_(", self.markup.convert('"Text"_link('))
+        self.assertEqual("`Text <link>`_)", self.markup.convert('"Text"_link)'))
 
 class TestFormatting(unittest.TestCase):
     def setUp(self):
