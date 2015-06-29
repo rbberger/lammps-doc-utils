@@ -43,6 +43,9 @@ class TestMarkup(unittest.TestCase):
         self.assertEqual("**bold** = [bold]\n"
                          "*italic* = {italic}\n", s)
 
+    def test_link_markup(self):
+        self.assertEqual("`Text <link>`_", self.markup.convert('"Text"_link'))
+
 class TestFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()

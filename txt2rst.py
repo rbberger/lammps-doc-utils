@@ -23,6 +23,9 @@ class RSTMarkup(Markup):
     def italic_end(self):
         return "*"
 
+    def create_link(self, content, href):
+        return "`%s <%s>`_" % (content.strip(), href)
+
 class RSTFormatting(Formatting):
     RST_HEADER_TYPES = '#*=-^"'
 
