@@ -38,6 +38,9 @@ class RSTFormatting(Formatting):
     def preformat(self, content):
         return "::\n\n" + self.indent(content.strip())
 
+    def horizontal_rule(self, content):
+        return "\n----------\n\n" + content.strip()
+
     def header(self, content, level):
         header_content = content.strip()
         header_underline = RSTFormatting.RST_HEADER_TYPES[level-1] * len(header_content)

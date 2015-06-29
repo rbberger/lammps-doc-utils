@@ -94,5 +94,16 @@ class TestFormatting(unittest.TestCase):
                          '"""""""\n'
                          '\n', s)
 
+class TestSpecialCommands(unittest.TestCase):
+    def setUp(self):
+        self.txt2rst = txt2rst.Txt2Rst()
+
+    def test_line(self):
+        s = self.txt2rst.convert("one :line\n")
+        self.assertEqual("\n"
+                         "----------\n"
+                         "\n"
+                         "one\n", s)
+
 if __name__ == '__main__':
     unittest.main()
