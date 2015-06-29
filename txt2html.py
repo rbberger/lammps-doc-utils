@@ -528,7 +528,7 @@ class TxtConverter:
     def get_output_filename(self, path):
         return ""
 
-    def create_converter(self):
+    def create_converter(self, args):
         return None
 
     def run(self, args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
@@ -544,9 +544,8 @@ class TxtConverter:
             with open(filename, 'r') as f:
                 print("Converting", filename, "...", file=err)
                 content = f.read()
-                converter = self.create_converter()
-                converter.append_page_break = parsed_args.breakflag
-                converter.create_title = parsed_args.create_title
+                converter = self.create_converter(parsed_args)
+
 
                 result = converter.convert(content)
 
@@ -571,14 +570,15 @@ class Txt2HtmlConverter(TxtConverter):
         parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
         return parser
 
-    def create_converter(self):
-        return Txt2Html()
+    def create_converter(self, args):
+        converter = Txt2Html()
+        converter.append_page_break = args.breakflag
+        converter.create_title = args.create_title
+        return converter
 
     def get_output_filename(self, path):
         filename, ext = os.path.splitext(path)
         return filename + ".html"
-
-
 
 if __name__ == "__main__":
     app = Txt2HtmlConverter()

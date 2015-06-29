@@ -5,7 +5,7 @@ import os
 import re
 import sys
 import argparse
-from txt2html import Markup, Formatting, TxtParser
+from txt2html import Markup, Formatting, TxtParser, TxtConverter
 
 class RSTMarkup(Markup):
     def __init__(self):
@@ -73,40 +73,6 @@ class Txt2Rst(TxtParser):
         super().__init__()
         self.markup = RSTMarkup()
         self.format = RSTFormatting(self.markup)
-
-parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into ReStructured Text.\nformatting & markup specification is given in README')
-parser.add_argument('-b', dest='breakflag', action='store_true',
-                   help='add a page-break comment to end of each HTML file. useful when set of HTML files will be converted to PDF')
-parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
-parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title based on first h1,h2,h3,h4... element')
-parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
-
-args = parser.parse_args()
-
-pagetitle = ""
-aliases = {}
-listflag = False
-allflag = False
-tableflag = False  # makes a table if tb command specified
-rowquit = 0        # number of cols per row if c=N specified (default = 0)
-dwidth = "0"       # width for all of the columns
-tabledelim = ""    # specialized separator
-tablealign = ""    # alignment for the table as an image
-dataalign = ""     # alignment for data in table
-rowvalign = ""     # vertical alignment for table
-
-cnum = []          # column IDs  with specified width
-cwidth = []        # column widths
-
-acolnum = []       # column IDs with specified alignment
-colalign = []      # column alignment
-
-vacolnum = []      # column IDs with specified vertical alignment
-colvalign = []     # column vertical alignment
-
-# TODO if output file is not writable
-#fprintf(stderr,"ERROR: Could not open %s\n",outfile.c_str())
-# #exit(1)
 
 class Context(object):
     def __init__(self):
@@ -789,5 +755,21 @@ def main():
         if outfile != sys.stdout:
             outfile.close()
 
+class Txt2RstConverter(TxtConverter):
+    def get_argument_parser(self):
+        parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into '
+                                                     'Restructured Text for Sphinx.')
+        parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
+        parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
+        return parser
+
+    def create_converter(self, args):
+        return Txt2Rst()
+
+    def get_output_filename(self, path):
+        filename, ext = os.path.splitext(path)
+        return filename + ".rst"
+
 if __name__ == "__main__":
-    main()
+    app = Txt2RstConverter()
+    app.run()

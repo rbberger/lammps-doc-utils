@@ -1,3 +1,5 @@
+import io
+import tempfile
 import unittest
 import txt2rst
 
@@ -115,6 +117,21 @@ class TestSpecialCommands(unittest.TestCase):
         self.assertEqual(s, ".. image:: file\n"
                             "   :target: link\n"
                             "one\n")
+
+class TestTxt2RstCLI(unittest.TestCase):
+    def setUp(self):
+        self.out = io.StringIO()
+        self.err = io.StringIO()
+        self.app = txt2rst.Txt2RstConverter()
+
+    def test_convert_single_file(self):
+        with tempfile.NamedTemporaryFile(mode='w+t') as f:
+            f.write('Hello World!\n')
+            f.flush()
+            args = [f.name]
+            self.app.run(args=args, out=self.out, err=self.err)
+            self.assertEqual("Hello World!\n\n", self.out.getvalue())
+            self.assertEqual("Converting " + f.name + " ...\n", self.err.getvalue())
 
 if __name__ == '__main__':
     unittest.main()
