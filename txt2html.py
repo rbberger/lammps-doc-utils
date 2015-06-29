@@ -521,48 +521,65 @@ class Txt2Html(TxtParser):
         self.markup = HTMLMarkup()
         self.format = HTMLFormatting(self.markup)
 
-def get_argument_parser():
-    parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into HTML.\n'
-                                                 'formatting & markup specification is given in README')
-    parser.add_argument('-b', dest='breakflag', action='store_true', help='add a page-break comment to end of each HTML'
-                                                                          ' file. useful when set of HTML files will be'
-                                                                          ' converted to PDF')
-    parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
-    parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page title '
-                                                                                           'based on first h1,h2,h3,'
-                                                                                           'h4... element')
-    parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
-    return parser
+class TxtConverter:
+    def get_argument_parser(self):
+        return None
 
-def get_output_filename(path):
-    filename, ext = os.path.splitext(path)
-    return filename + ".html"
+    def get_output_filename(self, path):
+        return ""
 
-def main(args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
-    parser = get_argument_parser()
-    parsed_args = parser.parse_args(args)
+    def create_converter(self):
+        return None
 
-    write_to_files = len(parsed_args.files) > 1
+    def run(self, args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
+        parser = self.get_argument_parser()
+        parsed_args = parser.parse_args(args)
 
-    for filename in parsed_args.files:
-        if parsed_args.skip_files and filename in parsed_args.skip_files:
-            continue
+        write_to_files = len(parsed_args.files) > 1
 
-        with open(filename, 'r') as f:
-            print("Converting", filename, "...", file=err)
-            content = f.read()
-            converter = Txt2Html()
-            converter.append_page_break = parsed_args.breakflag
-            converter.create_title = parsed_args.create_title
+        for filename in parsed_args.files:
+            if parsed_args.skip_files and filename in parsed_args.skip_files:
+                continue
 
-            result = converter.convert(content)
+            with open(filename, 'r') as f:
+                print("Converting", filename, "...", file=err)
+                content = f.read()
+                converter = self.create_converter()
+                converter.append_page_break = parsed_args.breakflag
+                converter.create_title = parsed_args.create_title
 
-            if write_to_files:
-                output_filename = get_output_filename(filename)
-                with open(output_filename, "w+t") as outfile:
-                    outfile.write(result)
-            else:
-                print(result, end='', file=out)
+                result = converter.convert(content)
+
+                if write_to_files:
+                    output_filename = self.get_output_filename(filename)
+                    with open(output_filename, "w+t") as outfile:
+                        outfile.write(result)
+                else:
+                    print(result, end='', file=out)
+
+class Txt2HtmlConverter(TxtConverter):
+    def get_argument_parser(self):
+        parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into HTML.\n'
+                                                     'formatting & markup specification is given in README')
+        parser.add_argument('-b', dest='breakflag', action='store_true', help='add a page-break comment to end of each'
+                                                                              'HTML file. useful when set of HTML files'
+                                                                              ' will be converted to PDF')
+        parser.add_argument('-x', metavar='file-to-skip', dest='skip_files', action='append')
+        parser.add_argument('--generate-title', dest='create_title', action='store_true', help='add HTML head page'
+                                                                                               'title based on first '
+                                                                                               'h1,h2,h3,h4... element')
+        parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
+        return parser
+
+    def create_converter(self):
+        return Txt2Html()
+
+    def get_output_filename(self, path):
+        filename, ext = os.path.splitext(path)
+        return filename + ".html"
+
+
 
 if __name__ == "__main__":
-    main()
+    app = Txt2HtmlConverter()
+    app.run()

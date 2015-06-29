@@ -532,13 +532,14 @@ class TestTxt2HtmlCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
         self.err = io.StringIO()
+        self.app = txt2html.Txt2HtmlConverter()
 
     def test_convert_single_file(self):
         with tempfile.NamedTemporaryFile(mode='w+t') as f:
             f.write('Hello World!\n')
             f.flush()
             args = [f.name]
-            txt2html.main(args=args, out=self.out, err=self.err)
+            self.app.run(args=args, out=self.out, err=self.err)
             self.assertEqual("<HTML>\n"
                               "<P>Hello World!\n"
                               "</P>\n"
@@ -553,7 +554,7 @@ class TestTxt2HtmlCLI(unittest.TestCase):
                 g.write('Hello World!\n')
                 g.flush()
                 args = [f.name, g.name]
-                txt2html.main(args=args, out=self.out, err=self.err)
+                self.app.run(args=args, out=self.out, err=self.err)
                 self.assertEqual("", self.out.getvalue())
                 self.assertEqual("Converting " + f.name + " ...\n"
                                   "Converting " + g.name + " ...\n", self.err.getvalue())
@@ -567,7 +568,7 @@ class TestTxt2HtmlCLI(unittest.TestCase):
             f.write('Hello World!\n')
             f.flush()
             args = ["-b", f.name]
-            txt2html.main(args=args, out=self.out, err=self.err)
+            self.app.run(args=args, out=self.out, err=self.err)
             self.assertEqual("<HTML>\n"
                               "<P>Hello World!\n"
                               "</P>\n"
@@ -582,7 +583,7 @@ class TestTxt2HtmlCLI(unittest.TestCase):
                 g.write('Hello World!\n')
                 g.flush()
                 args = ["-x", g.name, f.name, g.name]
-                txt2html.main(args=args, out=self.out, err=self.err)
+                self.app.run(args=args, out=self.out, err=self.err)
                 self.assertEqual("", self.out.getvalue())
                 self.assertEqual("Converting " + f.name + " ...\n", self.err.getvalue())
                 self.assertTrue(os.path.exists(f.name + ".html"))
@@ -594,7 +595,7 @@ class TestTxt2HtmlCLI(unittest.TestCase):
             f.write('Hello World! :h1\n')
             f.flush()
             args = ["--generate-title", f.name]
-            txt2html.main(args=args, out=self.out, err=self.err)
+            self.app.run(args=args, out=self.out, err=self.err)
             self.assertEqual("<HTML>\n"
                               "<HEAD>\n"
                               "<TITLE>Hello World!</TITLE>\n"
