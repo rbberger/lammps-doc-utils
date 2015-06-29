@@ -43,6 +43,8 @@ class RSTFormatting(Formatting):
 
     def image(self, content, file, link=None):
         converted = ".. image:: " + file + "\n"
+        if link:
+            converted += "   :target: " + link + "\n"
         return converted + content.strip()
 
     def header(self, content, level):

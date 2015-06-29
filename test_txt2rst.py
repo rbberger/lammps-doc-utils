@@ -110,5 +110,11 @@ class TestSpecialCommands(unittest.TestCase):
         self.assertEqual(".. image:: file\n"
                          "one\n", s)
 
+    def test_image_with_link(self):
+        s = self.txt2rst.convert("one :image(file,link)\n")
+        self.assertEqual(s, ".. image:: file\n"
+                            "   :target: link\n"
+                            "one\n")
+
 if __name__ == '__main__':
     unittest.main()
