@@ -141,6 +141,7 @@ class Txt2Rst(TxtParser):
         self.paragraph_filters.append(lammps_filters.detect_and_format_notes)
         self.document_filters.append(lammps_filters.filter_file_header_until_first_horizontal_line)
         self.document_filters.append(lammps_filters.detect_and_add_command_to_index)
+        self.document_filters.append(lammps_filters.filter_multiple_horizontal_rules)
 
 class Context(object):
     def __init__(self):

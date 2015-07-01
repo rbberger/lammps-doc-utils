@@ -32,3 +32,9 @@ class TestStructuralFilters(unittest.TestCase):
                                  "----------\n\n"
                                  "Title\n")
         self.assertEqual("Title\n\n", s)
+
+    def test_filter_multiple_horizontal_rules(self):
+        s = self.txt2rst.convert(":hline\n"
+                                 "   \n\n"
+                                 ":hline\n")
+        self.assertEqual("\n\n", s)
