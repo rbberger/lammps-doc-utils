@@ -137,6 +137,7 @@ class Txt2Rst(TxtParser):
 
     def register_filters(self):
         self.paragraph_filters.append(lammps_filters.detect_local_toc)
+        self.paragraph_filters.append(lammps_filters.detect_and_format_notes)
 
 class Context(object):
     def __init__(self):
