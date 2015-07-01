@@ -559,8 +559,6 @@ class TxtConverter:
                 print("Converting", filename, "...", file=err)
                 content = f.read()
                 converter = self.create_converter(parsed_args)
-
-
                 result = converter.convert(content)
 
                 if write_to_files:
