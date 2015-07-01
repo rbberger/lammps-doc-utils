@@ -25,3 +25,10 @@ class TestStructuralFilters(unittest.TestCase):
         s = self.txt2rst.convert("some command\n")
         self.assertEqual(".. index:: some\n\n"
                          "some command\n\n", s)
+
+    def test_filter_file_header(self):
+        s = self.txt2rst.convert("some random text\n"
+                                 "which should be ignored\n"
+                                 "----------\n\n"
+                                 "Title\n")
+        self.assertEqual("Title\n\n", s)

@@ -40,3 +40,7 @@ def detect_and_add_command_to_index(content):
         return index + content
 
     return content
+
+def filter_file_header_until_first_horizontal_line(content):
+    header_pattern = re.compile(r"^.+\n----------\n\s+", re.MULTILINE | re.DOTALL)
+    return header_pattern.sub('', content)
