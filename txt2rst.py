@@ -29,6 +29,8 @@ class RSTMarkup(Markup):
 
         if href in self.references:
             return ":ref:`%s <%s>`" % (content, href)
+        elif href in self.aliases:
+            href = "%s_" % href
 
         return "`%s <%s>`_" % (content, href)
 
@@ -59,6 +61,10 @@ class RSTFormatting(Formatting):
     def named_link(self, paragraph, name):
         self.markup.add_internal_reference(name)
         return (".. _%s:\n\n" % name) + paragraph
+
+    def define_link_alias(self, paragraph, alias, value):
+        self.markup.add_link_alias(alias, value)
+        return (".. _%s: %s\n\n" % (alias, value)) + paragraph
 
     def header(self, content, level):
         header_content = content.strip()
