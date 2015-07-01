@@ -79,6 +79,9 @@ class HTMLMarkup(Markup):
         return "<A HREF = \"" + href + "\">" + content + "</A>"
 
 class Formatting(object):
+    UNORDERED_LIST_MODE = "unordered-list"
+    ORDERED_LIST_MODE = "ordered-list"
+
     def __init__(self, markup):
         image_regex = r"^image\((?P<file>[^\,]+)(,(?P<link>[^\,]+))?\)"
         named_link_regex = r"^link\((?P<name>[^\,]+)\)"
@@ -88,6 +91,7 @@ class Formatting(object):
         self.define_link_alias_pattern = re.compile(define_link_alias_regex)
         self.markup = markup
         self.first_header = ""
+        self.current_list_mode = Formatting.UNORDERED_LIST_MODE
 
     def convert(self, command, paragraph):
         if command == "p":
@@ -119,8 +123,10 @@ class Formatting(object):
         elif command == "ule":
             return self.unordered_list_end(paragraph)
         elif command == "olb":
+            self.current_list_mode = Formatting.ORDERED_LIST_MODE
             return self.ordered_list_begin(paragraph)
         elif command == "ole":
+            self.current_list_mode = Formatting.UNORDERED_LIST_MODE
             return self.ordered_list_end(paragraph)
         elif command == "dlb":
             return self.definition_list_begin(paragraph)
@@ -171,13 +177,13 @@ class Formatting(object):
     def unordered_list(self, paragraph):
         converted = self.unordered_list_begin("")
         for line in paragraph.splitlines():
-            converted += self.list_item(line) + "\n"
+            converted += self.unordered_list_item(line) + "\n"
         return self.unordered_list_end(converted)
 
     def ordered_list(self, paragraph):
         converted = self.ordered_list_begin("")
-        for line in paragraph.splitlines():
-            converted += self.list_item(line) + "\n"
+        for index, line in enumerate(paragraph.splitlines()):
+            converted += self.ordered_list_item(line, index+1) + "\n"
         return self.ordered_list_end(converted)
 
     def definition_list(self, paragraph):
@@ -193,8 +199,16 @@ class Formatting(object):
 
         return self.definition_list_end(converted)
 
-    def list_item(self, paragraph):
+    def list_item(self, paragraph, index=None):
+        if self.current_list_mode == Formatting.ORDERED_LIST_MODE:
+            return self.ordered_list_item(paragraph, index)
+        return self.unordered_list_item(paragraph)
+
+    def unordered_list_item(self, paragraph):
         return "<LI>" + paragraph
+
+    def ordered_list_item(self, paragraph, index):
+        return self.unordered_list_item(paragraph)
 
     def definition_term(self, paragraph):
         return "<DT>" + paragraph

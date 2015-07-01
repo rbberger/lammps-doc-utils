@@ -57,13 +57,22 @@ class RSTFormatting(Formatting):
         header_underline = RSTFormatting.RST_HEADER_TYPES[level-1] * len(header_content)
         return header_content + "\n" + header_underline + "\n"
 
-    def list_item(self, paragraph):
+    def unordered_list_item(self, paragraph):
         return "* " + paragraph.strip()
+
+    def ordered_list_item(self, paragraph, index):
+        return str(index) + ". " + paragraph.strip()
 
     def unordered_list_begin(self, paragraph):
         return paragraph
 
     def unordered_list_end(self, paragraph):
+        return paragraph
+
+    def ordered_list_begin(self, paragraph):
+        return paragraph
+
+    def ordered_list_end(self, paragraph):
         return paragraph
 
     def begin_document(self):
