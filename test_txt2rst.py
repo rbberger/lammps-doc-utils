@@ -193,6 +193,18 @@ class TestSpecialCommands(unittest.TestCase):
                          "\n"
                          "`test <alias_>`_\n\n", s)
 
+class TestTableCommand(unittest.TestCase):
+    def setUp(self):
+        self.txt2rst = txt2rst.Txt2Rst()
+
+    def test_pass_table_as_raw_html(self):
+        s = self.txt2rst.convert("a,b,c :tb")
+        self.assertEqual(".. raw:: html\n\n"
+                         "   <DIV ALIGN=center><TABLE  BORDER=1 >\n"
+                         "   <TR><TD >a</TD><TD >b</TD><TD >c \n"
+                         "   </TD></TR></TABLE></DIV>\n"
+                         "\n", s)
+
 class TestTxt2RstCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()

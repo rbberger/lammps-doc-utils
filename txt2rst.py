@@ -121,6 +121,9 @@ class RSTFormatting(Formatting):
             indented += "   %s\n" % line
         return indented
 
+    def table(self, paragraph, configuration):
+        return self.raw_html(super().table(paragraph, configuration))
+
 class Txt2Rst(TxtParser):
     def __init__(self):
         super().__init__()
