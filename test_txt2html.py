@@ -256,6 +256,19 @@ class TestListFormatting(unittest.TestCase):
                              "</OL>\n"
                              "</HTML>\n")
 
+    def test_elementwise_ordered_list(self):
+        s = self.txt2html.convert("one :olb,l\n"
+                                 "two :l\n"
+                                 "three :ole,l\n")
+        self.assertEqual("<HTML>\n"
+                         "<OL><LI>one \n"
+                         "\n"
+                         "<LI>two \n"
+                         "\n"
+                         "<LI>three \n"
+                         "</OL>\n"
+                         "</HTML>\n", s)
+
     def test_definition_list(self):
         s = self.txt2html.convert("A\n"
                                   "first\n"

@@ -61,6 +61,8 @@ class RSTFormatting(Formatting):
         return "* " + paragraph.strip()
 
     def ordered_list_item(self, paragraph, index):
+        if index is None:
+            index = "#"
         return str(index) + ". " + paragraph.strip()
 
     def unordered_list_begin(self, paragraph):
@@ -70,6 +72,8 @@ class RSTFormatting(Formatting):
         return paragraph
 
     def ordered_list_begin(self, paragraph):
+        if paragraph.startswith('* '):
+            paragraph = '#. ' + paragraph[2:]
         return paragraph
 
     def ordered_list_end(self, paragraph):

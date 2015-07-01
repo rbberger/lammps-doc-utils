@@ -135,6 +135,14 @@ class TestListFormatting(unittest.TestCase):
                          "2. two\n"
                          "3. three\n\n", s)
 
+    def test_elementwise_ordered_list(self):
+        s = self.txt2rst.convert("one :olb,l\n"
+                                 "two :l\n"
+                                 "three :ole,l\n")
+        self.assertEqual("#. one\n"
+                         "#. two\n"
+                         "#. three\n", s)
+
 class TestSpecialCommands(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()
