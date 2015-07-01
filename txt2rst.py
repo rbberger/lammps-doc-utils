@@ -26,6 +26,10 @@ class RSTMarkup(Markup):
     def create_link(self, content, href):
         content = content.strip()
         content = content.replace('\n', '')
+
+        if href in self.references:
+            return ":ref:`%s <%s>`" % (content, href)
+
         return "`%s <%s>`_" % (content, href)
 
 class RSTFormatting(Formatting):
@@ -51,6 +55,10 @@ class RSTFormatting(Formatting):
         if link:
             converted += "   :target: " + link + "\n"
         return converted + content.strip()
+
+    def named_link(self, paragraph, name):
+        self.markup.add_internal_reference(name)
+        return (".. _%s:\n\n" % name) + paragraph
 
     def header(self, content, level):
         header_content = content.strip()

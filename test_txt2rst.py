@@ -177,6 +177,14 @@ class TestSpecialCommands(unittest.TestCase):
                             "   :target: link\n"
                             "one\n")
 
+    def test_internal_reference_link(self):
+        s = self.txt2rst.convert("one :link(name)\n"
+                                  "a \"link\"_name to above\n")
+        self.assertEqual(".. _name:\n"
+                         "\n"
+                         "one \n\n"
+                         "a :ref:`link <name>` to above\n\n", s)
+
 class TestTxt2RstCLI(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()

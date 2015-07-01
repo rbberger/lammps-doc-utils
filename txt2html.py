@@ -18,6 +18,7 @@ class Markup(object):
         link_regex = r"(?P<text>[^\"]+)\"_(?P<link>[^\s\t\n]+)"
         self.link_pattern = re.compile(link_regex)
         self.aliases = {}
+        self.references = set()
 
     def convert(self, text):
         text = self.bold(text)
@@ -27,6 +28,9 @@ class Markup(object):
 
     def add_link_alias(self, name, href):
         self.aliases[name] = href
+
+    def add_internal_reference(self, name):
+        self.references.add(name)
 
     def bold(self, text):
         text = text.replace("\\" + Markup.BOLD_START, Markup.START_PLACEHOLDER)
@@ -49,13 +53,7 @@ class Markup(object):
     def link(self, text):
         for name, link in self.link_pattern.findall(text):
             link = link.rstrip(Markup.PUNCTUATION_CHARACTERS)
-
-            if link in self.aliases:
-                href = self.aliases[link]
-            else:
-                href = link
-
-            href = self.create_link(name, href)
+            href = self.create_link(name, link)
             text = text.replace('\"%s\"_%s' % (name, link), href, 1)
         return text
 
@@ -75,7 +73,12 @@ class HTMLMarkup(Markup):
     def italic_end(self):
         return "</I>"
 
-    def create_link(self, content, href):
+    def create_link(self, content, link):
+        if link in self.aliases:
+            href = self.aliases[link]
+        else:
+            href = link
+
         return "<A HREF = \"" + href + "\">" + content + "</A>"
 
 class Formatting(object):
