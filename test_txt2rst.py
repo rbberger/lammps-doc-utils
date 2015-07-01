@@ -143,6 +143,18 @@ class TestListFormatting(unittest.TestCase):
                          "#. two\n"
                          "#. three\n", s)
 
+    def test_definition_list(self):
+        s = self.txt2rst.convert("A\n"
+                                  "first\n"
+                                  "B\n"
+                                  "second :dl\n")
+        self.assertEqual("A\n"
+                         "   first\n"
+                         "\n"
+                         "B\n"
+                         "   second\n"
+                         "\n\n", s)
+
 class TestSpecialCommands(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()

@@ -65,6 +65,12 @@ class RSTFormatting(Formatting):
             index = "#"
         return str(index) + ". " + paragraph.strip()
 
+    def definition_term(self, paragraph):
+        return paragraph.strip()
+
+    def definition_description(self, paragraph):
+        return self.indent(paragraph.strip())
+
     def unordered_list_begin(self, paragraph):
         return paragraph
 
@@ -74,6 +80,12 @@ class RSTFormatting(Formatting):
     def ordered_list_begin(self, paragraph):
         if paragraph.startswith('* '):
             paragraph = '#. ' + paragraph[2:]
+        return paragraph
+
+    def definition_list_begin(self, paragraph):
+        return paragraph
+
+    def definition_list_end(self, paragraph):
         return paragraph
 
     def ordered_list_end(self, paragraph):
