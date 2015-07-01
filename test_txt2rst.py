@@ -47,6 +47,9 @@ class TestMarkup(unittest.TestCase):
     def test_link_markup(self):
         self.assertEqual("`Text <link>`_", self.markup.convert('"Text"_link'))
 
+    def test_document_cross_reference_link(self):
+        self.assertEqual(":doc:`Text <link>`", self.markup.convert('"Text"_link.html'))
+
     def test_multiline_link_markup(self):
         s = self.txt2rst.convert('"Te\n'
                                   'xt"_link\n')
