@@ -115,6 +115,18 @@ class TestFormatting(unittest.TestCase):
                          '"""""""\n'
                          '\n', s)
 
+class TestListFormatting(unittest.TestCase):
+    def setUp(self):
+        self.txt2rst = txt2rst.Txt2Rst()
+
+    def test_unordered_list(self):
+        s = self.txt2rst.convert("one\n"
+                                  "two\n"
+                                  "three :ul\n")
+        self.assertEqual("* one\n"
+                         "* two\n"
+                         "* three\n\n", s)
+
 class TestSpecialCommands(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()
