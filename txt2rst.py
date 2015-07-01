@@ -47,6 +47,9 @@ class RSTFormatting(Formatting):
     def paragraph(self, content):
         return content.strip() + "\n"
 
+    def center(self, content):
+        return content
+
     def linebreak(self, content):
         return content.strip()
 
@@ -60,6 +63,10 @@ class RSTFormatting(Formatting):
         converted = ".. image:: " + file + "\n"
         if link:
             converted += "   :target: " + link + "\n"
+
+        if "c" in self.current_command_list:
+            converted += "   :align: center\n"
+
         return converted + content.strip()
 
     def named_link(self, paragraph, name):

@@ -95,8 +95,10 @@ class Formatting(object):
         self.markup = markup
         self.first_header = ""
         self.current_list_mode = Formatting.UNORDERED_LIST_MODE
+        self.current_command_list = []
 
-    def convert(self, command, paragraph):
+    def convert(self, command, paragraph, commands):
+        self.current_command_list = commands
         if command == "p":
             return self.paragraph(paragraph)
         elif command == "b":
@@ -489,8 +491,10 @@ class TxtParser(object):
         command_regex = r"(?P<command>[^\(,]+(\([^\)]+\))?),?"
         command_pattern = re.compile(command_regex)
 
-        for command, _ in reversed(command_pattern.findall(commands)):
-            paragraph = self.format.convert(command, paragraph)
+        commands = [x[0] for x in command_pattern.findall(commands)]
+
+        for command in reversed(commands):
+            paragraph = self.format.convert(command, paragraph, commands)
 
         return paragraph + '\n'
 
