@@ -424,6 +424,7 @@ class TxtParser(object):
         self.append_page_break = False
         self.create_title = False
         self.page_title = ""
+        self.paragraph_filters = []
 
     def convert(self, content):
         converted = self.format.begin_document()
@@ -452,7 +453,10 @@ class TxtParser(object):
     def transform_paragraphs(self, content):
         converted = ""
         for paragraph in self.paragraphs(content):
-            converted += self.convert_paragraph(paragraph)
+            converted_paragraph = self.convert_paragraph(paragraph)
+            for paragraph_filter in self.paragraph_filters:
+                converted_paragraph = paragraph_filter(converted_paragraph)
+            converted += converted_paragraph
         return converted
 
     def convert_paragraph(self, paragraph):

@@ -5,6 +5,7 @@ import os
 import re
 import sys
 import argparse
+import lammps_filters
 from txt2html import Markup, Formatting, TxtParser, TxtConverter
 
 class RSTMarkup(Markup):
@@ -132,6 +133,10 @@ class Txt2Rst(TxtParser):
         super().__init__()
         self.markup = RSTMarkup()
         self.format = RSTFormatting(self.markup)
+        self.register_filters()
+
+    def register_filters(self):
+        self.paragraph_filters.append(lammps_filters.detect_local_toc)
 
 class Context(object):
     def __init__(self):
