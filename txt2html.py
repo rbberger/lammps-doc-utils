@@ -425,6 +425,7 @@ class TxtParser(object):
         self.create_title = False
         self.page_title = ""
         self.paragraph_filters = []
+        self.document_filters = []
 
     def convert(self, content):
         converted = self.format.begin_document()
@@ -443,6 +444,10 @@ class TxtParser(object):
             converted += "<!-- PAGE BREAK -->\n"
 
         converted += self.format.end_document()
+
+        for doc_filter in self.document_filters:
+            converted = doc_filter(converted)
+
         return converted
 
     def parse_link_aliases_and_find_title(self, content):

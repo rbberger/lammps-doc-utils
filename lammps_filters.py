@@ -29,3 +29,14 @@ def detect_and_format_notes(paragraph):
         else:
             paragraph = '.. note::\n\n' + content + '\n'
     return paragraph
+
+def detect_and_add_command_to_index(content):
+    command_pattern = re.compile(r"^(?P<command>.+) command\s*\n")
+    m = command_pattern.match(content)
+
+    if m:
+        cmd = m.group('command')
+        index = ".. index:: %s\n\n" % cmd
+        return index + content
+
+    return content

@@ -20,3 +20,8 @@ class TestStructuralFilters(unittest.TestCase):
         self.assertEqual(".. note::\n\n"
                          "   Content\n"
                          "\n", s)
+
+    def test_detect_command_and_add_to_index(self):
+        s = self.txt2rst.convert("some command\n")
+        self.assertEqual(".. index:: some\n\n"
+                         "some command\n\n", s)
