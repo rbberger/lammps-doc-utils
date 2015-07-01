@@ -118,6 +118,11 @@ class TestFormatting(unittest.TestCase):
                          '"""""""\n'
                          '\n', s)
 
+    def test_filter_header_numbers(self):
+        s = self.txt2rst.convert("1.1 Level :h1\n")
+        self.assertEqual("Level\n"
+                         "#####\n\n", s)
+
 class TestListFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()
