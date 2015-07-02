@@ -227,13 +227,20 @@ class TestTableCommand(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()
 
-    def test_pass_table_as_raw_html(self):
+    def disable_test_pass_table_as_raw_html(self):
         s = self.txt2rst.convert("a,b,c :tb")
         self.assertEqual(".. raw:: html\n\n"
                          "   <DIV ALIGN=center><TABLE  BORDER=1 >\n"
                          "   <TR><TD >a</TD><TD >b</TD><TD >c \n"
                          "   </TD></TR></TABLE></DIV>\n"
                          "\n", s)
+
+    def test_convert_table_to_grid_table(self):
+        s = self.txt2rst.convert("a,b,c :tb")
+        table = "+---+---+---+\n" \
+                "| a | b | c |\n" \
+                "+---+---+---+\n"
+        self.assertEqual(table, s)
 
 class TestTxt2RstCLI(unittest.TestCase):
     def setUp(self):

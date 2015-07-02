@@ -132,8 +132,52 @@ class RSTFormatting(Formatting):
             indented += "   %s\n" % line
         return indented
 
+    def get_max_column_widths(self, rows):
+        num_columns = max([len(row) for row in rows])
+        max_widths = [0] * num_columns
+
+        for columns in rows:
+            for col_idx, column in enumerate(columns):
+                max_widths[col_idx] = max(max_widths[col_idx], len(column.strip())+2)
+
+        return max_widths
+
+    def create_table_horizontal_line(self, max_widths):
+        cell_borders = ['-' * width for width in max_widths]
+        return '+' + '+'.join(cell_borders) + "+"
+
     def table(self, paragraph, configuration):
-        return self.raw_html(super().table(paragraph, configuration))
+        if configuration['num_columns'] == 0:
+            rows = self.create_table_with_columns_based_on_newlines(paragraph, configuration['separator'])
+        else:
+            rows = self.create_table_with_fixed_number_of_columns(paragraph, configuration['separator'],
+                                                                  configuration['num_columns'])
+
+        column_widths = self.get_max_column_widths(rows)
+        max_columns = len(column_widths)
+        horizontal_line = self.create_table_horizontal_line(column_widths)
+
+        tbl = horizontal_line + "\n"
+
+        for row_idx in range(len(rows)):
+            columns = rows[row_idx]
+
+            tbl += "| "
+            for col_idx in range(max_columns):
+                if col_idx < len(columns):
+                    col = columns[col_idx].strip()
+                else:
+                    col = ""
+
+                tbl += col.ljust(column_widths[col_idx]-2, ' ')
+                tbl += " |"
+
+                if col_idx < max_columns - 1:
+                    tbl += " "
+            tbl += "\n"
+            tbl += horizontal_line
+
+        return tbl
 
 class Txt2Rst(TxtParser):
     def __init__(self):
