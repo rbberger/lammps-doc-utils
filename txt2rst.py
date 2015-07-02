@@ -25,7 +25,7 @@ class RSTMarkup(Markup):
 
     def create_link(self, content, href):
         content = content.strip()
-        content = content.replace('\n', '')
+        content = content.replace('\n', ' ')
 
         if href in self.references:
             return ":ref:`%s <%s>`" % (content, href)

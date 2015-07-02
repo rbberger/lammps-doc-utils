@@ -69,7 +69,7 @@ class TestMarkup(unittest.TestCase):
     def test_multiline_link_markup(self):
         s = self.txt2rst.convert('"Te\n'
                                   'xt"_link\n')
-        self.assertEqual("`Text <link>`_\n\n", s)
+        self.assertEqual("`Te xt <link>`_\n\n", s)
 
     def test_ignore_punctuation_in_link(self):
         self.assertEqual("`Text <link>`_.", self.markup.convert('"Text"_link.'))
