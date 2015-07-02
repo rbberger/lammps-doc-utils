@@ -239,7 +239,14 @@ class TestTableCommand(unittest.TestCase):
         s = self.txt2rst.convert("a,b,c :tb")
         table = "+---+---+---+\n" \
                 "| a | b | c |\n" \
-                "+---+---+---+\n"
+                "+---+---+---+\n\n"
+        self.assertEqual(table, s)
+
+    def test_avoid_rst_syntax_conflicts_with_table_separator(self):
+        s = self.txt2rst.convert("\"a\"_test.html: b: c :tb(s=:)")
+        table = "+-----------------+---+---+\n" \
+                "| :doc:`a <test>` | b | c |\n" \
+                "+-----------------+---+---+\n\n"
         self.assertEqual(table, s)
 
 class TestTxt2RstCLI(unittest.TestCase):

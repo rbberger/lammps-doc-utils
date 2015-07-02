@@ -147,6 +147,8 @@ class RSTFormatting(Formatting):
         return '+' + '+'.join(cell_borders) + "+"
 
     def table(self, paragraph, configuration):
+        paragraph = self.protect_rst_directives(paragraph)
+
         if configuration['num_columns'] == 0:
             rows = self.create_table_with_columns_based_on_newlines(paragraph, configuration['separator'])
         else:
@@ -155,9 +157,9 @@ class RSTFormatting(Formatting):
 
         column_widths = self.get_max_column_widths(rows)
         max_columns = len(column_widths)
-        horizontal_line = self.create_table_horizontal_line(column_widths)
+        horizontal_line = self.create_table_horizontal_line(column_widths) + "\n"
 
-        tbl = horizontal_line + "\n"
+        tbl = horizontal_line
 
         for row_idx in range(len(rows)):
             columns = rows[row_idx]
@@ -177,7 +179,18 @@ class RSTFormatting(Formatting):
             tbl += "\n"
             tbl += horizontal_line
 
+        tbl = self.restore_rst_directives(tbl)
         return tbl
+
+    def protect_rst_directives(self, content):
+        content = content.replace(":doc:", "0DOC0")
+        content = content.replace(":ref:", "0REF0")
+        return content
+
+    def restore_rst_directives(self, content):
+        content = content.replace("0DOC0", ":doc:")
+        content = content.replace("0REF0", ":ref:")
+        return content
 
 class Txt2Rst(TxtParser):
     def __init__(self):
