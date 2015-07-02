@@ -235,6 +235,12 @@ class TestSpecialCommands(unittest.TestCase):
                             "   :target: link\n"
                             "one\n")
 
+    def test_thumbnail_image(self):
+        # requires sphinxcontrib-images extension
+        s = self.txt2rst.convert("one :image(file,large_file.jpg)\n")
+        self.assertEqual(s, ".. thumbnail:: large_file.jpg\n"
+                            "one\n")
+
     def test_internal_reference_link(self):
         s = self.txt2rst.convert("one :link(name)\n"
                                   "a \"link\"_name to above\n")

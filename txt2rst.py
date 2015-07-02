@@ -59,9 +59,15 @@ class RSTFormatting(Formatting):
         return "\n----------\n\n" + content.strip()
 
     def image(self, content, file, link=None):
-        converted = ".. image:: " + file + "\n"
-        if link:
-            converted += "   :target: " + link + "\n"
+        if link and (link.lower().endswith('.jpg') or
+                         link.lower().endswith('.jpeg') or
+                         link.lower().endswith('.png') or
+                         link.lower().endswith('.gif')):
+            converted = ".. thumbnail:: " + link + "\n"
+        else:
+            converted = ".. image:: " + file + "\n"
+            if link:
+                converted += "   :target: " + link + "\n"
 
         if "c" in self.current_command_list:
             converted += "   :align: center\n"
