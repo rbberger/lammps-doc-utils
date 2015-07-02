@@ -453,17 +453,21 @@ class TxtParser(object):
         return converted
 
     def parse_link_aliases_and_find_title(self, content):
-        for paragraph in self.paragraphs(content):
-            self.convert_paragraph(paragraph)
+        for paragraph, is_raw in self.paragraphs(content):
+            if not is_raw:
+                self.convert_paragraph(paragraph)
         self.page_title = self.format.first_header
 
     def transform_paragraphs(self, content):
         converted = ""
-        for paragraph in self.paragraphs(content):
-            converted_paragraph = self.convert_paragraph(paragraph)
-            for paragraph_filter in self.paragraph_filters:
-                converted_paragraph = paragraph_filter(converted_paragraph)
-            converted += converted_paragraph
+        for paragraph, is_raw in self.paragraphs(content):
+            if is_raw:
+                converted += paragraph
+            else:
+                converted_paragraph = self.convert_paragraph(paragraph)
+                for paragraph_filter in self.paragraph_filters:
+                    converted_paragraph = paragraph_filter(converted_paragraph)
+                converted += converted_paragraph
         return converted
 
     def convert_paragraph(self, paragraph):
@@ -505,24 +509,41 @@ class TxtParser(object):
         paragraph = []
         last_line_had_format = False
         ignore_lines = False
+        raw_lines = False
 
         for line in self.lines(content):
             if self.is_ignored_textblock_begin(line):
                 if len(paragraph) > 0:
-                    yield '\n'.join(paragraph) + '\n'
+                    yield ('\n'.join(paragraph) + '\n', False)
                 paragraph = []
                 last_line_had_format = False
                 ignore_lines = True
             elif self.is_ignored_textblock_end(line):
                 ignore_lines = False
                 continue
+            elif self.is_raw_textblock_begin(line):
+                if len(paragraph) > 0:
+                    yield ('\n'.join(paragraph) + '\n', False)
+                paragraph = []
+                last_line_had_format = False
+                raw_lines = True
+                continue
+            elif self.is_raw_textblock_end(line):
+                if len(paragraph) > 0:
+                    yield ('\n'.join(paragraph) + '\n', True)
+                paragraph = []
+                raw_lines = False
+                continue
 
             if ignore_lines:
+                continue
+            elif raw_lines:
+                paragraph.append(line)
                 continue
 
             if self.is_paragraph_separator(line) or last_line_had_format:
                 if len(paragraph) > 0:
-                    yield '\n'.join(paragraph) + '\n'
+                    yield ('\n'.join(paragraph) + '\n', False)
 
                 if self.is_paragraph_separator(line):
                     paragraph = []
@@ -535,13 +556,19 @@ class TxtParser(object):
                 last_line_had_format = self.has_formatting(line)
 
         if len(paragraph) > 0:
-            yield '\n'.join(paragraph) + '\n'
+            yield ('\n'.join(paragraph) + '\n', False)
 
     def is_ignored_textblock_begin(self, line):
         return line.startswith('.. RST')
 
     def is_ignored_textblock_end(self, line):
         return line.startswith('.. END_RST')
+
+    def is_raw_textblock_begin(self, line):
+        return False
+
+    def is_raw_textblock_end(self, line):
+        return False
 
     def is_raw_html_paragraph(self, paragraph):
         return paragraph.startswith('<') and paragraph.endswith('>\n')

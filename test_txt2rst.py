@@ -33,6 +33,16 @@ class TestBasicFormatting(unittest.TestCase):
                                   ".. END_HTML_ONLY\n")
         self.assertEqual("", s)
 
+    def test_pass_through_raw_rst(self):
+        raw_rst = ".. toctree::\n" \
+                  "   :maxdepth: 2\n" \
+                  "   :numbered:\n" \
+                  "\n" \
+                  "   Introduction\n"
+
+        s = self.txt2rst.convert(".. RST\n" + raw_rst + ".. END_RST\n")
+        self.assertEqual(raw_rst, s)
+
 class TestMarkup(unittest.TestCase):
     def setUp(self):
         self.markup = txt2rst.RSTMarkup()

@@ -155,6 +155,12 @@ class Txt2Rst(TxtParser):
     def is_ignored_textblock_end(self, line):
         return line.startswith('.. END_HTML_ONLY')
 
+    def is_raw_textblock_begin(self, line):
+        return line.startswith('.. RST')
+
+    def is_raw_textblock_end(self, line):
+        return line.startswith('.. END_RST')
+
 class Txt2RstConverter(TxtConverter):
     def get_argument_parser(self):
         parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into '
