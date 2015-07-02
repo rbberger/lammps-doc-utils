@@ -27,6 +27,12 @@ class RSTMarkup(Markup):
         content = content.strip()
         content = content.replace('\n', ' ')
 
+        anchor_pos = href.find('#')
+
+        if anchor_pos >= 0:
+            href = href[anchor_pos+1:]
+            return ":ref:`%s <%s>`" % (content, href)
+
         if href in self.references:
             return ":ref:`%s <%s>`" % (content, href)
         elif href in self.aliases:
