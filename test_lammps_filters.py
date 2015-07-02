@@ -26,12 +26,15 @@ class TestStructuralFilters(unittest.TestCase):
         self.assertEqual(".. index:: some\n\n"
                          "some command\n\n", s)
 
-    def test_filter_file_header(self):
+    def test_filter_file_header_and_append_common_links(self):
         s = self.txt2rst.convert("some random text\n"
                                  "which should be ignored\n"
                                  "----------\n\n"
                                  "Title\n")
-        self.assertEqual("Title\n\n", s)
+        self.assertEqual("Title\n\n"
+                         "\n.. _lws: http://lammps.sandia.gov\n"
+                         ".. _ld: Manual.html\n"
+                         ".. _lc: Section_commands.html#comm\n", s)
 
     def test_filter_multiple_horizontal_rules(self):
         s = self.txt2rst.convert(":hline\n"

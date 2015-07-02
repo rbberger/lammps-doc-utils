@@ -45,8 +45,12 @@ def filter_file_header_until_first_horizontal_line(content):
     hr = '----------\n\n'
     first_hr = content.find(hr)
 
+    common_links = "\n.. _lws: http://lammps.sandia.gov\n" \
+                   ".. _ld: Manual.html\n" \
+                   ".. _lc: Section_commands.html#comm\n"
+
     if first_hr >= 0:
-        return content[first_hr+len(hr):].lstrip()
+        return content[first_hr+len(hr):].lstrip() + common_links
     return content
 
 def filter_multiple_horizontal_rules(content):
