@@ -42,8 +42,12 @@ def detect_and_add_command_to_index(content):
     return content
 
 def filter_file_header_until_first_horizontal_line(content):
-    header_pattern = re.compile(r"^.+\n----------\n\s+", re.MULTILINE | re.DOTALL)
-    return header_pattern.sub('', content)
+    hr = '----------\n\n\n'
+    first_hr = content.find(hr)
+
+    if first_hr >= 0:
+        return content[first_hr+len(hr):]
+    return content
 
 def filter_multiple_horizontal_rules(content):
-    return re.sub(r"------------[\s\n]+------------", '', content)
+    return re.sub(r"----------[\s\n]+----------", '', content)

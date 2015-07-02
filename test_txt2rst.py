@@ -168,6 +168,7 @@ class TestSpecialCommands(unittest.TestCase):
         self.txt2rst = txt2rst.Txt2Rst()
 
     def test_line(self):
+        self.txt2rst.document_filters = []
         s = self.txt2rst.convert("one :line\n")
         self.assertEqual("\n"
                          "----------\n"
