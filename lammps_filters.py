@@ -42,11 +42,11 @@ def detect_and_add_command_to_index(content):
     return content
 
 def filter_file_header_until_first_horizontal_line(content):
-    hr = '----------\n\n\n'
+    hr = '----------\n\n'
     first_hr = content.find(hr)
 
     if first_hr >= 0:
-        return content[first_hr+len(hr):]
+        return content[first_hr+len(hr):].lstrip()
     return content
 
 def filter_multiple_horizontal_rules(content):
