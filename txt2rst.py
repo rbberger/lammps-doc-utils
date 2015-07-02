@@ -149,6 +149,12 @@ class Txt2Rst(TxtParser):
         self.document_filters.append(lammps_filters.detect_and_add_command_to_index)
         self.document_filters.append(lammps_filters.filter_multiple_horizontal_rules)
 
+    def is_ignored_textblock_begin(self, line):
+        return line.startswith('.. HTML_ONLY')
+
+    def is_ignored_textblock_end(self, line):
+        return line.startswith('.. END_HTML_ONLY')
+
 class Txt2RstConverter(TxtConverter):
     def get_argument_parser(self):
         parser = argparse.ArgumentParser(description='converts a text file with simple formatting & markup into '

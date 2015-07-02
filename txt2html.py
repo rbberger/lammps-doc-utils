@@ -507,13 +507,13 @@ class TxtParser(object):
         ignore_lines = False
 
         for line in self.lines(content):
-            if line.startswith('.. RST'):
+            if self.is_ignored_textblock_begin(line):
                 if len(paragraph) > 0:
                     yield '\n'.join(paragraph) + '\n'
                 paragraph = []
                 last_line_had_format = False
                 ignore_lines = True
-            elif line.startswith('.. END_RST'):
+            elif self.is_ignored_textblock_end(line):
                 ignore_lines = False
                 continue
 
@@ -536,6 +536,12 @@ class TxtParser(object):
 
         if len(paragraph) > 0:
             yield '\n'.join(paragraph) + '\n'
+
+    def is_ignored_textblock_begin(self, line):
+        return line.startswith('.. RST')
+
+    def is_ignored_textblock_end(self, line):
+        return line.startswith('.. END_RST')
 
     def is_raw_html_paragraph(self, paragraph):
         return paragraph.startswith('<') and paragraph.endswith('>\n')

@@ -27,6 +27,12 @@ class TestBasicFormatting(unittest.TestCase):
         self.assertEqual(s, ".. raw:: html\n\n"
                             "   <div>Raw HTML</div>\n\n")
 
+    def test_ignore_html_only_block(self):
+        s = self.txt2rst.convert(".. HTML_ONLY\n\n"
+                                  "content :p\n"
+                                  ".. END_HTML_ONLY\n")
+        self.assertEqual("", s)
+
 class TestMarkup(unittest.TestCase):
     def setUp(self):
         self.markup = txt2rst.RSTMarkup()
