@@ -151,6 +151,24 @@ class TestListFormatting(unittest.TestCase):
                          "* two\n"
                          "* three\n\n", s)
 
+    def test_elementwise_unordered_list(self):
+        s = self.txt2rst.convert("one :ulb,l\n"
+                                 "two :l\n"
+                                 "three :ule,l\n")
+        self.assertEqual("* one\n"
+                         "* two\n"
+                         "* three\n", s)
+
+    def test_multi_line_unordered_list_elements(self):
+        s = self.txt2rst.convert("one :ulb,l\n"
+                                 "two\n"
+                                 "words :l\n"
+                                 "three :ule,l\n")
+        self.assertEqual("* one\n"
+                         "* two\n"
+                         "  words\n"
+                         "* three\n", s)
+
     def test_ordered_list(self):
         s = self.txt2rst.convert("one\n"
                                   "two\n"
@@ -165,6 +183,16 @@ class TestListFormatting(unittest.TestCase):
                                  "three :ole,l\n")
         self.assertEqual("#. one\n"
                          "#. two\n"
+                         "#. three\n", s)
+
+    def test_multi_line_ordered_list_elements(self):
+        s = self.txt2rst.convert("one :olb,l\n"
+                                 "two\n"
+                                 "words :l\n"
+                                 "three :ole,l\n")
+        self.assertEqual("#. one\n"
+                         "#. two\n"
+                         "   words\n"
                          "#. three\n", s)
 
     def test_definition_list(self):

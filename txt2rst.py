@@ -83,12 +83,12 @@ class RSTFormatting(Formatting):
         return header_content + "\n" + header_underline + "\n"
 
     def unordered_list_item(self, paragraph):
-        return "* " + paragraph.strip()
+        return "* " + paragraph.strip().replace('\n', '\n  ')
 
     def ordered_list_item(self, paragraph, index):
         if index is None:
             index = "#"
-        return str(index) + ". " + paragraph.strip()
+        return str(index) + ". " + paragraph.strip().replace('\n', '\n   ')
 
     def definition_term(self, paragraph):
         return paragraph.strip()
