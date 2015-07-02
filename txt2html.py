@@ -504,8 +504,22 @@ class TxtParser(object):
     def paragraphs(self, content):
         paragraph = []
         last_line_had_format = False
+        ignore_lines = False
 
         for line in self.lines(content):
+            if line.startswith('.. RST'):
+                if len(paragraph) > 0:
+                    yield '\n'.join(paragraph) + '\n'
+                paragraph = []
+                last_line_had_format = False
+                ignore_lines = True
+            elif line.startswith('.. END_RST'):
+                ignore_lines = False
+                continue
+
+            if ignore_lines:
+                continue
+
             if self.is_paragraph_separator(line) or last_line_had_format:
                 if len(paragraph) > 0:
                     yield '\n'.join(paragraph) + '\n'

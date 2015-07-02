@@ -40,6 +40,17 @@ class TestBasicFormatting(unittest.TestCase):
                              "<div>Raw HTML</div>\n\n"
                              "</HTML>\n")
 
+    def test_ignore_rst(self):
+        s = self.txt2html.convert(".. RST\n\n"
+                                  ".. toctree::\n"
+                                  "   :maxdepth: 2\n"
+                                  "   :numbered:\n"
+                                  "\n"
+                                  "   Introduction\n"
+                                  ".. END_RST\n")
+        self.assertEqual("<HTML>\n"
+                         "</HTML>\n", s)
+
 
 class TestMarkup(unittest.TestCase):
     def setUp(self):
