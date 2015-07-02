@@ -37,7 +37,7 @@ class RSTMarkup(Markup):
             return ":ref:`%s <%s>`" % (content, href)
         elif href in self.aliases:
             href = "%s_" % href
-        elif href.endswith('.html'):
+        elif href.endswith('.html') and not href.startswith('http'):
             href = href[0:-5]
             return ":doc:`%s <%s>`" % (content, href)
 
