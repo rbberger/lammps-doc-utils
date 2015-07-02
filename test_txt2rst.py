@@ -105,7 +105,7 @@ class TestFormatting(unittest.TestCase):
 
     def test_preformat_formatting(self):
         s = self.txt2rst.convert("Hello :pre\n")
-        self.assertEqual("::\n\n"
+        self.assertEqual(".. parsed-literal::\n\n"
                          "   Hello\n\n", s)
 
     def test_header_formatting(self):
