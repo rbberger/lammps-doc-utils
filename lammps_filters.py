@@ -53,5 +53,23 @@ def filter_file_header_until_first_horizontal_line(content):
         return content[first_hr+len(hr):].lstrip() + common_links
     return content
 
+def promote_doc_keywords(content):
+    content = content.replace('**Syntax:**\n', 'Syntax\n'
+                                               '""""""\n')
+    content = content.replace('**Examples:**\n', 'Examples\n'
+                                                 '""""""""\n')
+    content = content.replace('**Description:**\n', 'Description\n'
+                                                    '"""""""""""\n')
+    content = content.replace('**Restart, fix_modify, output, run start/stop, minimize info:**\n',
+                              'Restart, fix_modify, output, run start/stop, minimize info\n'
+                              '""""""""""""""""""""""""""""""""""""""""""""""""""""""""""\n')
+    content = content.replace('**Restrictions:**', 'Restrictions\n'
+                                                   '""""""""""""\n')
+    content = content.replace('**Related commands:**\n', 'Related commands\n'
+                                                         '""""""""""""""""\n')
+    content = content.replace('**Default:**\n', 'Default\n'
+                                                '"""""""\n')
+    return content
+
 def filter_multiple_horizontal_rules(content):
     return re.sub(r"----------[\s\n]+----------", '', content)
