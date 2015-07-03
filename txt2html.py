@@ -598,6 +598,11 @@ class Txt2Html(TxtParser):
         self.markup = HTMLMarkup()
         self.format = HTMLFormatting(self.markup)
 
+    def is_paragraph_separator(self, line):
+        return line.startswith(".. HTML_ONLY") or \
+               line.startswith(".. END_HTML_ONLY") or \
+               super().is_paragraph_separator(line)
+
 class TxtConverter:
     def get_argument_parser(self):
         return None

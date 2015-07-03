@@ -51,6 +51,15 @@ class TestBasicFormatting(unittest.TestCase):
         self.assertEqual("<HTML>\n"
                          "</HTML>\n", s)
 
+    def test_ignore_html_only_markup(self):
+        s = self.txt2html.convert(".. HTML_ONLY\n"
+                                  "Hello World!\n"
+                                  ".. END_HTML_ONLY\n")
+        self.assertEqual("<HTML>\n"
+                         "<P>Hello World!\n"
+                         "</P>\n"
+                         "</HTML>\n", s)
+
 
 class TestMarkup(unittest.TestCase):
     def setUp(self):
