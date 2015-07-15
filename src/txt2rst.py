@@ -132,6 +132,7 @@ class RSTFormatting(Formatting):
         indented = ""
         for line in paragraph.splitlines():
             indented += "| %s\n" % line
+        indented += "| \n"
         return indented
 
     def begin_document(self):

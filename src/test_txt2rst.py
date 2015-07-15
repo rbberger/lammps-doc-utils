@@ -149,6 +149,7 @@ class TestFormatting(unittest.TestCase):
         self.assertEqual("| one\n"
                          "| two\n"
                          "| three \n"
+                         "| \n"
                          "\n", s)
 
     def test_links_with_all_breaks(self):
@@ -158,6 +159,7 @@ class TestFormatting(unittest.TestCase):
         self.assertEqual("| `one <link>`_\n"
                          "| `two <link>`_\n"
                          "| `three <link>`_ \n"
+                         "| \n"
                          "\n", s)
 
 class TestListFormatting(unittest.TestCase):
