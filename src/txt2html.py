@@ -1,3 +1,4 @@
+#! /bin/env python
 # Python rewrite of txt2html by Richard Berger (2015)
 # The original txt2html was written in C by Steve Plimpton (http://www.cs.sandia.gov/cgi-bin/sjplimp/)
 import os
