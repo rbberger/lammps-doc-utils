@@ -128,6 +128,12 @@ class RSTFormatting(Formatting):
     def ordered_list_end(self, paragraph):
         return paragraph
 
+    def all_breaks(self, paragraph):
+        indented = ""
+        for line in paragraph.splitlines():
+            indented += "| %s\n" % line
+        return indented
+
     def begin_document(self):
         return ""
 

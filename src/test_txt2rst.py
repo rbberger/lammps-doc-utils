@@ -142,6 +142,24 @@ class TestFormatting(unittest.TestCase):
         self.assertEqual("Level\n"
                          "#####\n\n", s)
 
+    def test_all_breaks(self):
+        s = self.txt2rst.convert("one\n"
+                                  "two\n"
+                                  "three :all(b)\n")
+        self.assertEqual("| one\n"
+                         "| two\n"
+                         "| three \n"
+                         "\n", s)
+
+    def test_links_with_all_breaks(self):
+        s = self.txt2rst.convert("\"one\"_link\n"
+                                  "\"two\"_link\n"
+                                  "\"three\"_link :all(b)\n")
+        self.assertEqual("| `one <link>`_\n"
+                         "| `two <link>`_\n"
+                         "| `three <link>`_ \n"
+                         "\n", s)
+
 class TestListFormatting(unittest.TestCase):
     def setUp(self):
         self.txt2rst = txt2rst.Txt2Rst()
