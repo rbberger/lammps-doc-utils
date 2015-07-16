@@ -560,10 +560,10 @@ class TxtParser(object):
             yield ('\n'.join(paragraph) + '\n', False)
 
     def is_ignored_textblock_begin(self, line):
-        return line.startswith('.. RST')
+        return line.startswith('<!-- RST')
 
     def is_ignored_textblock_end(self, line):
-        return line.startswith('.. END_RST')
+        return line.startswith('END_RST -->')
 
     def is_raw_textblock_begin(self, line):
         return False

@@ -41,23 +41,24 @@ class TestBasicFormatting(unittest.TestCase):
                              "</HTML>\n")
 
     def test_ignore_rst(self):
-        s = self.txt2html.convert(".. RST\n\n"
+        s = self.txt2html.convert("<!-- RST\n\n"
                                   ".. toctree::\n"
                                   "   :maxdepth: 2\n"
                                   "   :numbered:\n"
                                   "\n"
                                   "   Introduction\n"
-                                  ".. END_RST\n")
+                                  "END_RST -->\n")
         self.assertEqual("<HTML>\n"
                          "</HTML>\n", s)
 
     def test_ignore_html_only_markup(self):
-        s = self.txt2html.convert(".. HTML_ONLY\n"
+        s = self.txt2html.convert("<!-- HTML_ONLY -->\n"
                                   "Hello World!\n"
-                                  ".. END_HTML_ONLY\n")
+                                  "<!-- END_HTML_ONLY -->\n")
         self.assertEqual("<HTML>\n"
-                         "<P>Hello World!\n"
-                         "</P>\n"
+                         "<!-- HTML_ONLY -->\n"
+                         "Hello World!\n"
+                         "<!-- END_HTML_ONLY -->\n\n"
                          "</HTML>\n", s)
 
 

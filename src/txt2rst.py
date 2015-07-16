@@ -226,16 +226,16 @@ class Txt2Rst(TxtParser):
         self.document_filters.append(lammps_filters.promote_doc_keywords)
 
     def is_ignored_textblock_begin(self, line):
-        return line.startswith('.. HTML_ONLY')
+        return line.startswith('<!-- HTML_ONLY -->')
 
     def is_ignored_textblock_end(self, line):
-        return line.startswith('.. END_HTML_ONLY')
+        return line.startswith('<!-- END_HTML_ONLY -->')
 
     def is_raw_textblock_begin(self, line):
-        return line.startswith('.. RST')
+        return line.startswith('<!-- RST')
 
     def is_raw_textblock_end(self, line):
-        return line.startswith('.. END_RST')
+        return line.startswith('END_RST -->')
 
 class Txt2RstConverter(TxtConverter):
     def get_argument_parser(self):
