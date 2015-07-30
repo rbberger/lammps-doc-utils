@@ -111,6 +111,13 @@ class TestFormatting(unittest.TestCase):
         self.assertEqual(".. parsed-literal::\n\n"
                          "   Hello\n\n", s)
 
+    def test_preformat_formatting_with_indentation(self):
+        s = self.txt2rst.convert("    Hello\n"
+                                 "    World :pre\n")
+        self.assertEqual(".. parsed-literal::\n\n"
+                         "       Hello\n"
+                         "       World\n\n", s)
+
     def test_header_formatting(self):
         s = self.txt2rst.convert("Level 1 :h1\n"
                                  "Level 2 :h2\n"

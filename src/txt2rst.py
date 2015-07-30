@@ -59,7 +59,7 @@ class RSTFormatting(Formatting):
         return content.strip()
 
     def preformat(self, content):
-        return ".. parsed-literal::\n\n" + self.indent(content.strip())
+        return ".. parsed-literal::\n\n" + self.indent(content.rstrip())
 
     def horizontal_rule(self, content):
         return "\n----------\n\n" + content.strip()
