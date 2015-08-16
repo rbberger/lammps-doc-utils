@@ -1,4 +1,4 @@
-#! /bin/env python3
+#! /usr/bin/env python3
 # LAMMPS Documentation Utilities
 #
 # Python rewrite of txt2html

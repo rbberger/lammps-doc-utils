@@ -1,4 +1,4 @@
-#! /bin/env python3
+#! /usr/bin/env python3
 # LAMMPS Documentation Utilities
 #
 # Converter of LAMMPS documentation format to Sphinx ReStructured Text
