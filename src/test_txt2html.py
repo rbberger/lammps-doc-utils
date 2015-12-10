@@ -655,5 +655,20 @@ class TestTxt2HtmlCLI(unittest.TestCase):
                               "</H1>\n"
                               "</HTML>\n", self.out.getvalue())
 
+class TestMathMarkup(unittest.TestCase):
+    def setUp(self):
+        self.txt2html = txt2html.Txt2Html()
+
+    def test_detect_latex_equation(self):
+        s = self.txt2html.convert("\\begin\\{equation\\} T_\\{ij\\}(r_\\{ij\\}) = 1 - \\left( 1 +\n"
+                                  "\\frac\{s_\\{ij\} r_\\{ij\} \\}\\{2\\} \\right)\n"
+                                  "\\exp \\left( - s_\\{ij\\} r_\\{ij\\} \\right) \\end\\{equation\\}\n")
+        self.assertEqual("<HTML>\n"
+                         "<P>\\begin{equation} T_{ij}(r_{ij}) = 1 - \\left( 1 +\n"
+                         "\\frac{s_{ij} r_{ij} }{2} \\right)\n"
+                         "\\exp \\left( - s_{ij} r_{ij} \\right) \\end{equation}\n"
+                         "</P>\n"
+                         "</HTML>\n", s)
+
 if __name__ == '__main__':
     unittest.main()
