@@ -27,6 +27,7 @@ from txt2html import Markup, Formatting, TxtParser, TxtConverter
 class RSTMarkup(Markup):
     def __init__(self):
         super().__init__()
+        self.inline_math_pattern = re.compile(r'\\\(\s*([^\s]+)\s*\\\)')
 
     def bold_start(self):
         return "**"
@@ -39,6 +40,15 @@ class RSTMarkup(Markup):
 
     def italic_end(self):
         return "*"
+
+    def convert(self, text):
+        text = super().convert(text)
+        text = self.inline_math(text)
+        return text
+
+    def inline_math(self, text):
+        text = self.inline_math_pattern.sub(r":math:`\1`", text)
+        return text
 
     def create_link(self, content, href):
         content = content.strip()

@@ -347,6 +347,7 @@ class TestTxt2RstCLI(unittest.TestCase):
 
 class TestMathMarkup(unittest.TestCase):
     def setUp(self):
+        self.markup = txt2rst.RSTMarkup()
         self.txt2rst = txt2rst.Txt2Rst()
 
     def test_detect_latex_equation(self):
@@ -357,6 +358,9 @@ class TestMathMarkup(unittest.TestCase):
                          "   \\begin{equation} T_{ij}(r_{ij}) = 1 - \\left( 1 +\n"
                          "   \\frac{s_{ij} r_{ij} }{2} \\right)\n"
                          "   \\exp \\left( - s_{ij} r_{ij} \\right) \\end{equation}\n\n", s)
+
+    def test_detect_inline_math(self):
+        self.assertEqual(":math:`x^2`", self.markup.convert("\\( x^2 \\)"))
 
 if __name__ == '__main__':
     unittest.main()
