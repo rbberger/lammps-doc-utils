@@ -374,5 +374,16 @@ class TestMathMarkup(unittest.TestCase):
     def test_detect_inline_math(self):
         self.assertEqual(":math:`x^2`", self.markup.convert("\\( x^2 \\)"))
 
+    def test_detect_multiline_inline_math(self):
+        line = "\\(\\sqrt \\{ \\frac \\{2\, k_B \\mathtt\\{Tcom\\}\, m'\\}\n" \
+               "\\{\\mathrm dt\\, \\mathtt\\{damp\\_com\\} \\}\n" \
+               "\\} \\). :b\n" \
+               "\(f_r'\) is a random force proportional to\n"
+        expected = ":math:`\\sqrt { \\frac {2\\, k_B \\mathtt{Tcom}\, m'} " \
+                   "{\\mathrm dt\\, \\mathtt{damp\\_com} } " \
+                   "}`.\n" \
+                   ":math:`f_r'` is a random force proportional to\n\n"
+        self.assertEqual(expected, self.txt2rst.convert(line))
+
 if __name__ == '__main__':
     unittest.main()
