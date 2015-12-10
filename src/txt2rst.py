@@ -228,6 +228,9 @@ class RSTFormatting(Formatting):
         content = content.replace("0REF0", ":ref:")
         return content
 
+    def math(self, content):
+        return ".. math::\n\n" + self.indent(content)
+
 class Txt2Rst(TxtParser):
     def __init__(self):
         super().__init__()
