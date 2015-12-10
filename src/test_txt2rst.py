@@ -354,10 +354,22 @@ class TestMathMarkup(unittest.TestCase):
         s = self.txt2rst.convert("\\begin\\{equation\\} T_\\{ij\\}(r_\\{ij\\}) = 1 - \\left( 1 +\n"
                                  "\\frac\{s_\\{ij\} r_\\{ij\} \\}\\{2\\} \\right)\n"
                                  "\\exp \\left( - s_\\{ij\\} r_\\{ij\\} \\right) \\end\\{equation\\}\n")
-        self.assertEqual(".. math::\n\n"
+        self.assertEqual("\n.. math::\n\n"
                          "   \\begin{equation} T_{ij}(r_{ij}) = 1 - \\left( 1 +\n"
                          "   \\frac{s_{ij} r_{ij} }{2} \\right)\n"
                          "   \\exp \\left( - s_{ij} r_{ij} \\right) \\end{equation}\n\n", s)
+
+    def test_detect_inline_latex_equation(self):
+        s = self.txt2rst.convert("Masses: \\begin\\{equation\\} M' = M + m \\end\\{equation\\}\n"
+                                 "\\begin\\{equation\\} m' = \\frac \\{M\\, m \\} \\{M'\\} \\end\\{equation\\}\n")
+        self.assertEqual("Masses:\n"
+                         "\n.. math::\n\n"
+                         "   \\begin{equation} M' = M + m \end{equation}\n"
+                         "\n"
+                         "\n.. math::\n"
+                         "\n"
+                         "   \\begin{equation} m' = \\frac {M\\, m } {M'} \\end{equation}\n"
+                         "\n", s)
 
     def test_detect_inline_math(self):
         self.assertEqual(":math:`x^2`", self.markup.convert("\\( x^2 \\)"))

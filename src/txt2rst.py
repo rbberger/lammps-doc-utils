@@ -239,7 +239,35 @@ class RSTFormatting(Formatting):
         return content
 
     def math(self, content):
-        return ".. math::\n\n" + self.indent(content)
+        eqs = content.split(r'\end{equation}')
+
+        text = ""
+
+        if len(eqs) > 1:
+            post = eqs[-1].strip()
+            eqs = eqs[0:-1]
+        else:
+            post = ""
+
+        for eq in eqs:
+            if len(eq.strip()) == 0:
+                continue
+            parts = eq.split(r'\begin{equation}')
+            assert(len(parts) == 1 or len(parts) == 2)
+            if len(parts) == 2:
+                start = parts[0].strip()
+                body = parts[1]
+            else:
+                start = ""
+                body = parts[0]
+
+            if len(start) > 0:
+                text += start + "\n"
+            text += "\n.. math::\n\n"
+            text += self.indent(r'\begin{equation}' + body.strip('\n') + r'\end{equation}')
+            text += "\n"
+
+        return text + post
 
 class Txt2Rst(TxtParser):
     def __init__(self):

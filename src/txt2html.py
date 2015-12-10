@@ -183,7 +183,7 @@ class Formatting(object):
         return ""
 
     def math(self, paragraph):
-        return self.paragraph(paragraph)
+        return self.paragraph(paragraph) + "\n"
 
     def paragraph(self, paragraph):
         return "<P>" + paragraph + "</P>"
@@ -498,7 +498,7 @@ class TxtParser(object):
             return self.format.raw_html(paragraph) + '\n'
 
         if self.is_math_paragraph(paragraph):
-            return self.format.math(self.do_markup(paragraph)) + '\n'
+            return self.format.math(self.do_markup(paragraph))
 
         if self.has_formatting(paragraph):
             paragraph = self.do_markup(paragraph)
@@ -600,7 +600,7 @@ class TxtParser(object):
         return paragraph.startswith('<') and paragraph.endswith('>\n')
 
     def is_math_paragraph(self, paragraph):
-        return paragraph.startswith('\\begin\{equation\}') and ('\\end\{equation\}' in paragraph)
+        return ('\\begin\{equation\}' in paragraph) and ('\\end\{equation\}' in paragraph)
 
     def is_paragraph_separator(self, line):
         return len(line) == 0 or line.isspace()
