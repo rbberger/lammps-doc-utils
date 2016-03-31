@@ -83,6 +83,9 @@ class TestMarkup(unittest.TestCase):
     def test_document_cross_reference_link(self):
         self.assertEqual(":doc:`Text <link>`", self.markup.convert('"Text"_link.html'))
 
+    def test_user_atc_link(self):
+        self.assertEqual("`Text <USER/atc/link.html>`_", self.markup.convert('"Text"_USER/atc/link.html'))
+
     def test_external_link(self):
         self.assertEqual("`Text <http://site/index.html>`_", self.markup.convert('"Text"_http://site/index.html'))
 
