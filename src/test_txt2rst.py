@@ -77,6 +77,21 @@ class TestMarkup(unittest.TestCase):
         self.assertEqual("**bold** = [bold]\n"
                          "*italic* = {italic}\n", s)
 
+    def test_paragraph_with_italic(self):
+        self.assertEqual("A sentence with a *italic* word", self.markup.convert("A sentence with a {italic} word"))
+
+    def test_paragraph_with_partial_italic(self):
+        self.assertEqual("A sentence with a partial *italic*\ normal word",
+                         self.markup.convert("A sentence with a partial {italic}normal word"))
+
+    def test_paragraph_with_partial_bold(self):
+        self.assertEqual("A sentence with a partial **bold**\ normal word",
+                         self.markup.convert("A sentence with a partial [bold]normal word"))
+
+    def test_paragraph_with_mixed_formats(self):
+        self.assertEqual("A sentence with a partial normal\ **bold**\ *italic*\ normal word",
+                         self.markup.convert("A sentence with a partial normal[bold]{italic}normal word"))
+
     def test_link_markup(self):
         self.assertEqual("`Text <link>`_", self.markup.convert('"Text"_link'))
 

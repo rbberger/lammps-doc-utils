@@ -40,6 +40,22 @@ class RSTMarkup(Markup):
     def italic_end(self):
         return "*"
 
+    def bold(self, text):
+        """ RST requires a space after inline formats.
+        For words which only partially apply a format add a backslash and whitespace to create valid RST"""
+        text = re.sub(r'([^\s\\])\[([^\]\\]+)\]', r'\1\\ [\2]', text)
+        text = re.sub(r'([^\\]?)\[([^\]\\]+)\]([^\s])', r'\1[\2]\\ \3', text)
+        text = super().bold(text)
+        return text
+
+    def italic(self, text):
+        """ RST requires a space after inline formats.
+        For words which only partially apply a format add a backslash and whitespace to create valid RST"""
+        text = re.sub(r'([^\s\\])\{([^\}\\]+)\}', r'\1\\ {\2}', text)
+        text = re.sub(r'([^\\]?)\{([^\}\\]+)\}([^\s])', r'\1{\2}\\ \3', text)
+        text = super().italic(text)
+        return text
+
     def convert(self, text):
         text = super().convert(text)
         text = self.inline_math(text)
