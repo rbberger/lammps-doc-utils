@@ -47,10 +47,10 @@ extensions = [
 ## Installation
 
 1. Clone this repository
-2. Add the `bin` folder to your `PATH` environment variable
+2. Install using setup.py
 
    ```bash
-   export PATH=/your/install/directory/bin:$PATH
+   python setup.py install
    ```
 
 ## Usage
