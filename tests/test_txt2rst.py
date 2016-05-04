@@ -18,7 +18,7 @@
 import io
 import tempfile
 import unittest
-import txt2rst
+from lammpsdoc import txt2rst
 
 class TestBasicFormatting(unittest.TestCase):
     def setUp(self):

@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-import txt2rst
+from lammpsdoc import txt2rst
 
 class TestStructuralFilters(unittest.TestCase):
     def setUp(self):

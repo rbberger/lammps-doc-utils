@@ -19,7 +19,7 @@ import unittest
 import tempfile
 import io
 import os
-import txt2html
+from lammpsdoc import txt2html
 
 class TestBasicFormatting(unittest.TestCase):
     def setUp(self):

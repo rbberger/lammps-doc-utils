@@ -21,8 +21,8 @@
 import os
 import re
 import argparse
-import lammps_filters
-from txt2html import Markup, Formatting, TxtParser, TxtConverter
+from lammpsdoc import lammps_filters
+from lammpsdoc.txt2html import Markup, Formatting, TxtParser, TxtConverter
 
 class RSTMarkup(Markup):
     def __init__(self):
@@ -336,6 +336,9 @@ class Txt2RstConverter(TxtConverter):
         filename, ext = os.path.splitext(path)
         return filename + ".rst"
 
-if __name__ == "__main__":
+def main():
     app = Txt2RstConverter()
     app.run()
+
+if __name__ == "__main__":
+    main()

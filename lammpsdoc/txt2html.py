@@ -689,6 +689,9 @@ class Txt2HtmlConverter(TxtConverter):
         filename, ext = os.path.splitext(path)
         return filename + ".html"
 
-if __name__ == "__main__":
+def main():
     app = Txt2HtmlConverter()
     app.run()
+
+if __name__ == "__main__":
+    main()
