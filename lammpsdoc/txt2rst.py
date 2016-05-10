@@ -25,8 +25,9 @@ from lammpsdoc import lammps_filters
 from lammpsdoc.txt2html import Markup, Formatting, TxtParser, TxtConverter
 
 class RSTMarkup(Markup):
-    def __init__(self):
+    def __init__(self, filename='default.rst'):
         super().__init__()
+        self.filename = os.path.basename(filename)
 
     def bold_start(self):
         return "**"
@@ -82,12 +83,18 @@ class RSTMarkup(Markup):
 
         anchor_pos = href.find('#')
 
-        if anchor_pos >= 0:
-            href = href[anchor_pos+1:]
-            return ":ref:`%s <%s>`" % (content, href)
+        if anchor_pos > 0:
+            filename = os.path.splitext(href[0:anchor_pos])[0]
+            href = href[anchor_pos + 1:]
+            return ":ref:`%s <%s_%s>`" % (content, filename, href)
+        elif anchor_pos == 0:
+            filename = os.path.splitext(self.filename)[0]
+            href = href[anchor_pos + 1:]
+            return ":ref:`%s <%s_%s>`" % (content, filename, href)
 
         if href in self.references:
-            return ":ref:`%s <%s>`" % (content, href)
+            filename = os.path.splitext(self.filename)[0]
+            return ":ref:`%s <%s_%s>`" % (content, filename, href)
         elif href in self.aliases:
             href = "%s_" % href
         elif href.endswith('.html') and not href.startswith('http') and 'USER/atc' not in href:
@@ -99,8 +106,9 @@ class RSTMarkup(Markup):
 class RSTFormatting(Formatting):
     RST_HEADER_TYPES = '#*=-^"'
 
-    def __init__(self, markup):
+    def __init__(self, markup, filename = 'default.rst'):
         super().__init__(markup)
+        self.filename = os.path.basename(filename)
 
     def paragraph(self, content):
         return content.strip() + "\n"
@@ -135,7 +143,8 @@ class RSTFormatting(Formatting):
 
     def named_link(self, paragraph, name):
         self.markup.add_internal_reference(name)
-        return (".. _%s:\n\n" % name) + paragraph
+        filename = os.path.splitext(self.filename)[0]
+        return (".. _%s_%s:\n\n" % (filename, name)) + paragraph
 
     def define_link_alias(self, paragraph, alias, value):
         self.markup.add_link_alias(alias, value)
@@ -296,10 +305,10 @@ class RSTFormatting(Formatting):
         return text + post
 
 class Txt2Rst(TxtParser):
-    def __init__(self):
+    def __init__(self, filename='default.rst'):
         super().__init__()
-        self.markup = RSTMarkup()
-        self.format = RSTFormatting(self.markup)
+        self.markup = RSTMarkup(filename=filename)
+        self.format = RSTFormatting(self.markup,filename=filename)
         self.register_filters()
 
     def register_filters(self):
@@ -329,8 +338,8 @@ class Txt2RstConverter(TxtConverter):
         parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
         return parser
 
-    def create_converter(self, args):
-        return Txt2Rst()
+    def create_converter(self, args, filename='default.txt'):
+        return Txt2Rst(filename=self.get_output_filename(filename))
 
     def get_output_filename(self, path):
         filename, ext = os.path.splitext(path)

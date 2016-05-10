@@ -309,18 +309,18 @@ class TestSpecialCommands(unittest.TestCase):
     def test_internal_reference_link(self):
         s = self.txt2rst.convert("one :link(name)\n"
                                   "a \"link\"_name to above\n")
-        self.assertEqual(".. _name:\n"
+        self.assertEqual(".. _default_name:\n"
                          "\n"
                          "one \n\n"
-                         "a :ref:`link <name>` to above\n\n", s)
+                         "a :ref:`link <default_name>` to above\n\n", s)
 
     def test_local_anchor_link(self):
         s = self.txt2rst.convert("one :link(name)\n"
                                   "a \"link\"_#name to above\n")
-        self.assertEqual(".. _name:\n"
+        self.assertEqual(".. _default_name:\n"
                          "\n"
                          "one \n\n"
-                         "a :ref:`link <name>` to above\n\n", s)
+                         "a :ref:`link <default_name>` to above\n\n", s)
 
     def test_define_link_alias(self):
         s = self.txt2rst.convert("one :link(alias,value)\n"

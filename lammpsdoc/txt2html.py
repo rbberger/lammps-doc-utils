@@ -639,7 +639,7 @@ class TxtConverter:
     def get_output_filename(self, path):
         return ""
 
-    def create_converter(self, args):
+    def create_converter(self, args, filename='default.txt'):
         return None
 
     def run(self, args=sys.argv[1:], out=sys.stdout, err=sys.stderr):
@@ -655,7 +655,7 @@ class TxtConverter:
             with open(filename, 'r') as f:
                 print("Converting", filename, "...", file=err)
                 content = f.read()
-                converter = self.create_converter(parsed_args)
+                converter = self.create_converter(parsed_args, filename=filename)
                 result = converter.convert(content)
 
                 if write_to_files:
