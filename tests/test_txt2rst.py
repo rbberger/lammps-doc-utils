@@ -322,6 +322,14 @@ class TestSpecialCommands(unittest.TestCase):
                          "one \n\n"
                          "a :ref:`link <default_name>` to above\n\n", s)
 
+    def test_repeating_words_in_anchor_link(self):
+        s = self.txt2rst.convert("one :link(name_name_2_2)\n"
+                                  "a \"link\"_#name_name_2_2 to above\n")
+        self.assertEqual(".. _default_name_2_2:\n"
+                         "\n"
+                         "one \n\n"
+                         "a :ref:`link <default_name_2_2>` to above\n\n", s)
+
     def test_define_link_alias(self):
         s = self.txt2rst.convert("one :link(alias,value)\n"
                                  "\"test\"_alias\n")

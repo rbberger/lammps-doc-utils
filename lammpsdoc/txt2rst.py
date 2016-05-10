@@ -23,6 +23,18 @@ import re
 import argparse
 from lammpsdoc import lammps_filters
 from lammpsdoc.txt2html import Markup, Formatting, TxtParser, TxtConverter
+from collections import OrderedDict
+
+def simplify_anchor(anchor_url):
+    """ Remove repeating words, but leave repeating numbers """
+    def unique_words(s):
+        parts = s.split('_')
+        last_word = ""
+        for word in parts:
+            if word.isdecimal() or word != last_word:
+                yield word
+                last_word = word
+    return '_'.join(unique_words(anchor_url))
 
 class RSTMarkup(Markup):
     def __init__(self, filename='default.rst'):
@@ -86,15 +98,18 @@ class RSTMarkup(Markup):
         if anchor_pos > 0:
             filename = os.path.splitext(href[0:anchor_pos])[0]
             href = href[anchor_pos + 1:]
-            return ":ref:`%s <%s_%s>`" % (content, filename, href)
+            href = simplify_anchor(filename + "_" + href)
+            return ":ref:`%s <%s>`" % (content, href)
         elif anchor_pos == 0:
             filename = os.path.splitext(self.filename)[0]
             href = href[anchor_pos + 1:]
-            return ":ref:`%s <%s_%s>`" % (content, filename, href)
+            href = simplify_anchor(filename + "_" + href)
+            return ":ref:`%s <%s>`" % (content, href)
 
         if href in self.references:
             filename = os.path.splitext(self.filename)[0]
-            return ":ref:`%s <%s_%s>`" % (content, filename, href)
+            href = simplify_anchor(filename + "_" + href)
+            return ":ref:`%s <%s>`" % (content, href)
         elif href in self.aliases:
             href = "%s_" % href
         elif href.endswith('.html') and not href.startswith('http') and 'USER/atc' not in href:
@@ -144,7 +159,8 @@ class RSTFormatting(Formatting):
     def named_link(self, paragraph, name):
         self.markup.add_internal_reference(name)
         filename = os.path.splitext(self.filename)[0]
-        return (".. _%s_%s:\n\n" % (filename, name)) + paragraph
+        name = simplify_anchor(filename + "_" + name)
+        return (".. _%s:\n\n" % (name)) + paragraph
 
     def define_link_alias(self, paragraph, alias, value):
         self.markup.add_link_alias(alias, value)

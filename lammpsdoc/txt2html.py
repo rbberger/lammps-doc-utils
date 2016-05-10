@@ -679,7 +679,7 @@ class Txt2HtmlConverter(TxtConverter):
         parser.add_argument('files',  metavar='file', nargs='+', help='one or more files to convert')
         return parser
 
-    def create_converter(self, args):
+    def create_converter(self, args, filename='default.txt'):
         converter = Txt2Html()
         converter.append_page_break = args.breakflag
         converter.create_title = args.create_title
