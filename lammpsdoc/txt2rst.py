@@ -25,6 +25,7 @@ from lammpsdoc import lammps_filters
 from lammpsdoc.txt2html import Markup, Formatting, TxtParser, TxtConverter
 from collections import OrderedDict
 
+
 def simplify_anchor(anchor_url):
     """ Remove repeating words, but leave repeating numbers """
     def unique_words(s):
@@ -190,7 +191,7 @@ class RSTFormatting(Formatting):
         self.markup.add_internal_reference(name)
         filename = os.path.splitext(self.filename)[0]
         name = simplify_anchor(filename + "_" + name)
-        return (".. _%s:\n\n" % (name)) + paragraph
+        return (".. _%s:\n\n" % self.markup.unescape_rst_chars(name)) + paragraph
 
     def define_link_alias(self, paragraph, alias, value):
         self.markup.add_link_alias(alias, value)
