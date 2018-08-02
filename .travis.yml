@@ -7,8 +7,10 @@ python:
 install:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.2' ]]; then pip install 'coverage<4.0.0'; fi
   - pip install coveralls
+  - pip install codecov
 
 script: coverage run --source lammpsdoc setup.py test
 
 after_success:
     coveralls
+    codecov
