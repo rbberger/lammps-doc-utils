@@ -1,5 +1,7 @@
 # LAMMPS Documentation Utilities
 
+**This tool is no longer necessary. All of the LAMMPS documentation has been successfully converted to ReStructured Text. This repository will now be archived for historic purposes.**
+
 [![Build Status](https://travis-ci.org/rbberger/lammps-doc-utils.svg?branch=master)](https://travis-ci.org/rbberger/lammps-doc-utils)
 
 [![Coverage Status](https://coveralls.io/repos/github/rbberger/lammps-doc-utils/badge.svg?branch=master)](https://coveralls.io/github/rbberger/lammps-doc-utils?branch=master)
